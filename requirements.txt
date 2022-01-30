@@ -1,0 +1,7 @@
+wheel~=0.33.1
+cryptography~=2.9.2
+ipaddress~=1.0.22
+setuptools~=41.0.1
+Flask
+Flask-Testing
+nose
