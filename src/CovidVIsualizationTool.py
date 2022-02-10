@@ -1,5 +1,11 @@
-class CovidVisualizationTool:
-    def __init__(self):
-        pass
+import pandas as pd
 
-# TODO: Here is where the data will be parsed and placed into a pandas dataframe
+
+class CovidVisualizationTool:
+    def __init__(self, csv_data):
+        self.csv_data = csv_data
+
+    def get_data(self):
+        """Place Data into Pandas dataframe"""
+        covid_df = pd.read_csv(self.csv_data)
+        return covid_df
