@@ -1,4 +1,6 @@
 import json
+import urllib.parse
+
 from pymongo import MongoClient
 from imports.base import dbBase
 from imports.models import Base
@@ -19,20 +21,22 @@ import pandas as pd
 #         """load tables with data"""
 
 class ImportData:
-    def __init__(self, csv_path, db_name):
+    def __init__(self, csv_path, db_name, db_pwd):
         self.csv_path = csv_path
         self.db_name = db_name
         self.collection_name = 'Covid_Data'
-        self.db_url = '127.0.0.1'
-        self.db_port = 27017
+        self.client = None
+        self.db_pwd = db_pwd
 
-    def mongoimport(self):
-        """ Imports a csv file at path csv_name to a mongo colection
-        returns: count of the documants in the new collection
-        """
-        client = MongoClient(f"mongodb+srv://admin:Y775tR!fhwZ22my@cluster0.tfxlb.mongodb.net/{self.db_name}?retryWrites=true&w=majority")
-        db = client.test
-        #coll = db[self.collection_name]
-        data = pd.read_csv(self.csv_path)
-        #coll.insert_one(data.to_dict())
-        return print(client.list_database_names())
+    def createDB(self):
+        """ Creates database"""
+        self.client = MongoClient(f"mongodb+srv://admin:{urllib.parse.quote(self.db_pwd)}@cluster0.tfxlb.mongodb.net/{self.db_name}?retryWrites=true&w=majority")
+        return print(self.client.list_database_names())
+
+    def addCollections(self):
+        """Adds Collections to DB"""
+
+        db = self.client.test
+        db.collection.delete_many({})
+        # data = pd.read_csv(self.csv_path)
+        # db.collection.insert_many(data.to_dict('records'))
