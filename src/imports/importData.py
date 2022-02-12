@@ -20,6 +20,7 @@ class ImportData(dbBase):
     def load_tables(self):
         """load tables with data"""
         df = pd.read_csv(self.csv_file)
+        print(df)
 
 
 
