@@ -10,7 +10,7 @@ class Location(Base):
     __tablename__ = 'location'
     location_id = Column(Integer, primary_key=True, autoincrement=True)
     location = Column('location', String(100), nullable=False)
-    continent = Column('continent', String(100), nullable=False)
+    continent = Column('continent', String(100), nullable=True)
     location_cases_id = Column(Integer, ForeignKey('cases.cases_id'))
     location_tests_id = Column(Integer, ForeignKey('tests.tests_id'))
     location_deaths_id = Column(Integer, ForeignKey('deaths.deaths_id'))
@@ -23,10 +23,9 @@ class Location(Base):
     location_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
     location_boosted_id = Column(Integer, ForeignKey('boosted.boosted_id'))
 
-    def __init__(self, location_id, location, continent, location_cases_id, location_tests_id, location_deaths_id,
+    def __init__(self, location, continent, location_cases_id, location_tests_id, location_deaths_id,
                  location_population_id, location_date_id, location_age_id, location_vaccinated_id, location_icu_id,
                  location_hospital_id, location_positive_id, location_boosted_id):
-        self.location_id = location_id
         self.location = location
         self.continent = continent
         self.location_cases_id = location_cases_id
@@ -45,37 +44,36 @@ class Location(Base):
 class Cases(Base):
     __tablename__ = 'cases'
     cases_id = Column(Integer, primary_key=True, autoincrement=True)
-    total_cases = Column('total_cases', Integer, nullable=False)
-    new_cases = Column('new_cases', Integer, nullable=False)
-    new_cases_smoothed = Column('new_cases_smoothed', Integer, nullable=False)
-    total_cases_per_million = Column('total_cases_per_million', Integer, nullable=False)
-    new_cases_per_million = Column('new_cases_per_million', Integer, nullable=False)
-    new_cases_smoothed_per_million = Column('new_cases_smoothed_per_million', Integer, nullable=False)
+    total_cases = Column('total_cases', Integer, nullable=True)
+    new_cases = Column('new_cases', Integer, nullable=True)
+    new_cases_smoothed = Column('new_cases_smoothed', Integer, nullable=True)
+    total_cases_per_million = Column('total_cases_per_million', Integer, nullable=True)
+    new_cases_per_million = Column('new_cases_per_million', Integer, nullable=True)
+    new_cases_smoothed_per_million = Column('new_cases_smoothed_per_million', Integer, nullable=True)
 
     def __init__(self, total_cases, new_cases, new_cases_smoothed, total_cases_per_million, new_cases_per_million,
-                 new_cases_smoothed_per_millino):
+                 new_cases_smoothed_per_million):
         self.total_cases = total_cases
         self.new_cases = new_cases
         self.new_cases_smoothed = new_cases_smoothed
         self.total_cases_per_million = total_cases_per_million
         self.new_cases_per_million = new_cases_per_million
-        self.new_cases_smoothed_per_million = new_cases_smoothed_per_millino
+        self.new_cases_smoothed_per_million = new_cases_smoothed_per_million
 
 
 class Tests(Base):
     __tablename__ = 'tests'
     tests_id = Column(Integer, primary_key=True, autoincrement=True)
-    new_tests = Column('new_tests', Integer, nullable=False)
-    total_tests = Column('total_tests', Integer, nullable=False)
-    total_tests_per_thousand = Column('total_tests_per_thousand', Integer, nullable=False)
-    new_tests_per_thousand = Column('new_tests_per_thousand', Integer, nullable=False)
-    new_tests_smoothed = Column('new_tests_smoothed', Integer, nullable=False)
-    new_tests_smoothed_per_thousand = Column('new_tests_smoothed_per_thousand', Integer, nullable=False)
-    tests_per_case = Column('tests_per_case', Integer, nullable=False)
-    test_units = Column('test_units', Integer, nullable=False)
+    new_tests = Column('new_tests', Integer, nullable=True)
+    total_tests = Column('total_tests', Integer, nullable=True)
+    total_tests_per_thousand = Column('total_tests_per_thousand', Integer, nullable=True)
+    new_tests_per_thousand = Column('new_tests_per_thousand', Integer, nullable=True)
+    new_tests_smoothed = Column('new_tests_smoothed', Integer, nullable=True)
+    new_tests_smoothed_per_thousand = Column('new_tests_smoothed_per_thousand', Integer, nullable=True)
+    tests_per_case = Column('tests_per_case', Integer, nullable=True)
 
     def __init__(self, new_tests, total_tests, total_tests_per_thousand, new_tests_per_thousand, new_tests_smoothed,
-                 new_tests_smoothed_per_thousand, tests_per_case, test_units):
+                 new_tests_smoothed_per_thousand, tests_per_case):
         self.new_tests = new_tests
         self.total_tests = total_tests
         self.total_tests_per_thousand = total_tests_per_thousand
@@ -83,18 +81,17 @@ class Tests(Base):
         self.new_tests_smoothed = new_tests_smoothed
         self.new_tests_smoothed_per_thousand = new_tests_smoothed_per_thousand
         self.tests_per_case = tests_per_case
-        self.test_units = test_units
 
 
 class Deaths(Base):
     __tablename__ = 'deaths'
     deaths_id = Column(Integer, primary_key=True, autoincrement=True)
-    total_deaths = Column('total_deaths', Integer, nullable=False)
-    new_deaths = Column('new_deaths', Integer, nullable=False)
-    new_deaths_smoothed = Column('new_deaths_smoothed', Integer, nullable=False)
-    total_deaths_per_million = Column('total_deaths_per_million', Integer, nullable=False)
-    new_deaths_per_million = Column('new_deaths_per_million', Integer, nullable=False)
-    new_deaths_smoothed_per_million = Column('new_deaths_smoothed_per_million', Integer, nullable=False)
+    total_deaths = Column('total_deaths', Integer, nullable=True)
+    new_deaths = Column('new_deaths', Integer, nullable=True)
+    new_deaths_smoothed = Column('new_deaths_smoothed', Integer, nullable=True)
+    total_deaths_per_million = Column('total_deaths_per_million', Integer, nullable=True)
+    new_deaths_per_million = Column('new_deaths_per_million', Integer, nullable=True)
+    new_deaths_smoothed_per_million = Column('new_deaths_smoothed_per_million', Integer, nullable=True)
     death_vaccination_id = Column(Integer, ForeignKey('vaccinated.vaccinated_id'))
 
     def __init__(self, total_deaths, new_deaths, new_deaths_smoothed, total_deaths_per_million,
@@ -127,7 +124,7 @@ class Population(Base):
 class Date(Base):
     __tablename__ = 'date'
     date_id = Column(Integer, primary_key=True, autoincrement=True)
-    date = Column('date', String(100))
+    date = Column('date', String(100), nullable=False)
 
     def __init__(self, date):
         self.date = date
@@ -136,9 +133,9 @@ class Date(Base):
 class Age(Base):
     __tablename__ = 'age'
     age_id = Column(Integer, primary_key=True, autoincrement=True)
-    median_age = Column('median_age', Integer, nullable=False)
-    aged_65_older = Column('aged_65_older', Integer, nullable=False)
-    aged_70_older = Column('aged_70_older', Integer, nullable=False)
+    median_age = Column('median_age', Integer, nullable=True)
+    aged_65_older = Column('aged_65_older', Integer, nullable=True)
+    aged_70_older = Column('aged_70_older', Integer, nullable=True)
     age_deaths_id = Column(Integer, ForeignKey('deaths.deaths_id'))
 
     def __init__(self, median_age, aged_65_older, aged_70_older, age_deaths_id):
@@ -162,8 +159,20 @@ class Vaccinated(Base):
     new_vaccinations_smoothed_per_million = Column('new_vaccinations_smoothed_per_million', Integer, nullable=True)
     new_people_vaccinated_smoothed = Column('new_people_vaccinated_smoothed', Integer, nullable=True)
 
-    def __init__(self, scan_tool):
-        self.scan_tool = scan_tool
+    def __init__(self, total_vaccinations, people_vaccinated, people_fully_vaccinated, new_vaccinations,
+                 new_vaccinations_smoothed, total_vaccinations_per_hundred, people_vaccinated_per_hundred,
+                 people_fully_vaccinated_per_hundred, new_vaccinations_smoothed_per_million,
+                 new_people_vaccinated_smoothed):
+        self.total_vaccinations = total_vaccinations
+        self.people_vaccinated = people_vaccinated
+        self.people_fully_vaccinated = people_fully_vaccinated
+        self.new_vaccinations = new_vaccinations
+        self.new_vaccinations_smoothed = new_vaccinations_smoothed
+        self.total_vaccinations_per_hundred = total_vaccinations_per_hundred
+        self.people_vaccinated_per_hundred = people_vaccinated_per_hundred
+        self.people_fully_vaccinated_per_hundred = people_fully_vaccinated_per_hundred
+        self.new_vaccinations_smoothed_per_million = new_vaccinations_smoothed_per_million
+        self.new_people_vaccinated_smoothed = new_people_vaccinated_smoothed
 
 
 class Boosted(Base):
@@ -182,8 +191,8 @@ class ICU(Base):
     icu_id = Column(Integer, primary_key=True, nullable=False)
     icu_patients = Column('icu_patients', Integer, nullable=True)
     icu_patients_per_million = Column('icu_patients_per_million', Integer, nullable=True)
-    weekly_icu_admissions = Column('weekly_icu_admissions', Integer, nullable=False)
-    weekly_icu_admissions_per_million = Column('weekly_icu_admissions_per_million', Integer, nullable=False)
+    weekly_icu_admissions = Column('weekly_icu_admissions', Integer, nullable=True)
+    weekly_icu_admissions_per_million = Column('weekly_icu_admissions_per_million', Integer, nullable=True)
     vaccinated_icu_id = Column(Integer, ForeignKey('vaccinated.vaccinated_id'))
 
     def __init__(self, icu_patients, icu_patients_per_million, weekly_icu_admissions,
@@ -198,10 +207,10 @@ class ICU(Base):
 class Hospital(Base):
     __tablename__ = 'hospital'
     hospital_id = Column(Integer, primary_key=True, nullable=False)
-    hosp_patients = Column('hosp_patients', Integer, nullable=False)
-    hosp_patients_per_million = Column('hosp_patients_per_million', Integer, nullable=False)
-    weekly_hosp_admissions = Column('weekly_hosp_admissions', Integer, nullable=False)
-    weekly_hosp_admissions_per_million = Column('weekly_hosp_admissions_per_million', Integer, nullable=False)
+    hosp_patients = Column('hosp_patients', Integer, nullable=True)
+    hosp_patients_per_million = Column('hosp_patients_per_million', Integer, nullable=True)
+    weekly_hosp_admissions = Column('weekly_hosp_admissions', Integer, nullable=True)
+    weekly_hosp_admissions_per_million = Column('weekly_hosp_admissions_per_million', Integer, nullable=True)
 
     def __init__(self, hosp_patients, hosp_patients_per_million,
                  weekly_hosp_admissions, weekly_hosp_admissions_per_million):
@@ -214,7 +223,7 @@ class Hospital(Base):
 class Positive(Base):
     __tablename__ = 'positive'
     positive_id = Column(Integer, primary_key=True, nullable=False)
-    positive_rate = Column('positive_rate', Integer, nullable=False)
+    positive_rate = Column('positive_rate', Integer, nullable=True)
     tests_positive_id = Column(Integer, ForeignKey('tests.tests_id'))
 
     def __init__(self, positive_rate, tests_positive_id):
