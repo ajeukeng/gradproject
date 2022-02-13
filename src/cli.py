@@ -16,9 +16,17 @@ def cvt():
 def import_data(csv_location, db_name: str):
     # Import Covid Dataset
     if cu.check_path(csv_location):
-        # id_covid = ID(csv_location, db_name)
-        # id_covid.load_tables()
-        query_stuff = QD(db_location=db_name)
-        query_stuff.get_all_data()
+        id_covid = ID(csv_location, db_name)
+        id_covid.load_tables()
     else:
         print("Unable to find path")
+
+
+@cvt.command()
+@click.argument('db_name')
+def query_data(db_name: str):
+    if cu.check_path(db_name):
+        query_stuff = QD(db_location=db_name)
+        print(query_stuff.get_all_data())
+    else:
+        print("Unable to find database")

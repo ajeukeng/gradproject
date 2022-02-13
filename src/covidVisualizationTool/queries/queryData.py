@@ -10,9 +10,11 @@ class QueryData(dbBase):
     def get_all_data(self):
         """Query to retrieve all distinct artifacts"""
         all_data = self.session.query(Location.location).distinct()
-        print(all_data)
-        for r in all_data:
-            print(r)
+        all_data_list = []
+        for data in all_data:
+            all_data_list.append(data)
+
+        return all_data_list
 
     def get_death_rate_partially_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
