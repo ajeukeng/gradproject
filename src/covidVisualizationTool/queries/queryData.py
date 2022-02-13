@@ -1,3 +1,5 @@
+import pandas as pd
+
 from covidVisualizationTool.imports.base import dbBase
 from covidVisualizationTool.imports.models import *
 
@@ -18,7 +20,16 @@ class QueryData(dbBase):
 
     def get_death_rate_partially_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        pass
+        death_rate_partially_vaccinated_query = self.session.query(Deaths.new_deaths, Vaccinated.people_vaccinated,
+                                                                   Date.date, Location.location).\
+            join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id).\
+            join(Date, Date.date_id == Location.location_date_id).\
+            join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id).\
+            filter(Location.location.like('United States')).distinct()
+        df = pd.read_sql(death_rate_partially_vaccinated_query.statement, con=self.session.bind)
+        print(df)
+
+        return death_rate_partially_vaccinated_query
 
     def get_death_rate_fully_vaccinated(self):
         """Query to retrieve the death rate vs number of fully vaccinated individuals over time"""

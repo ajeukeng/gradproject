@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} New Deaths vs People Vaccinated {% endblock %}</h1>
+    <table id="myTable">
+ <tr>
+   <!--When a header is clicked, run the sortTable function-->
+     <th>New Deaths</th>
+     <th>People Vaccinated</th>
+     <th>Date</th>
+     <th>Location</th>
+  </tr>
+{% for item in data %}
+  <tr>
+    <td>{{item.new_deaths}}</td>
+    <td>{{item.people_vaccinated}}</td>
+    <td>{{item.date}}</td>
+    <td>{{item.location}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
