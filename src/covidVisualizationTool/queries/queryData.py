@@ -26,6 +26,7 @@ class QueryData(dbBase):
             join(Date, Date.date_id == Location.location_date_id).\
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id).\
             filter(Location.location.like('United States')).distinct()
+        # TODO: Could be used for logging
         df = pd.read_sql(death_rate_partially_vaccinated_query.statement, con=self.session.bind)
         print(df)
 

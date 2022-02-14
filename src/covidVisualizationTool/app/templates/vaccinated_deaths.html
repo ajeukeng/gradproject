@@ -2,22 +2,80 @@
 
 {% block content %}
     <h1>{% block title %} New Deaths vs People Vaccinated {% endblock %}</h1>
-    <table id="myTable">
- <tr>
-   <!--When a header is clicked, run the sortTable function-->
-     <th>New Deaths</th>
-     <th>People Vaccinated</th>
-     <th>Date</th>
-     <th>Location</th>
-  </tr>
-{% for item in data %}
-  <tr>
-    <td>{{item.new_deaths}}</td>
-    <td>{{item.people_vaccinated}}</td>
-    <td>{{item.date}}</td>
-    <td>{{item.location}}</td>
-  </tr>
-{% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="chart" width="1000" height="800"></canvas>
+    <script>
+
+      // line chart data
+      var lineData = {
+        labels : [
+          {% for item in labels %}
+            "{{ item }}",
+
+          {% endfor %}
+        ],
+        type:'line',
+
+        datasets : [{
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          bezierCurve : false,
+          data : [
+	    {% for item in values %}
+              {{ item }},
+
+            {% endfor %}]
+
+          }
+	]
+      }
+
+      Chart.defaults.global.animationSteps = 50;
+      Chart.defaults.global.tooltipYPadding = 16;
+      Chart.defaults.global.tooltipCornerRadius = 0;
+      Chart.defaults.global.tooltipTitleFontStyle = "normal";
+      Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+      Chart.defaults.global.animationEasing = "easeOutBounce";
+      Chart.defaults.global.responsive = false;
+      Chart.defaults.global.scaleLineColor = "black";
+      Chart.defaults.global.scaleFontSize = 16;
+
+      // get bar chart canvas
+      var mychart = document.getElementById("chart").getContext("2d");
+
+      steps = 10
+      max = {{ max }}
+      // draw line chart
+      var LineChart = new Chart(mychart).Line(lineData, {
+        scaleOverride: true,
+        scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true,
+        bezierCurve: false
+      });
+
+    </script>
+  </center>
+</body>
+</html>
 
 {% endblock %}
