@@ -20,7 +20,7 @@ class QueryData(dbBase):
 
     def get_death_rate_partially_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        death_rate_partially_vaccinated_query = self.session.query(Deaths.new_deaths, Vaccinated.people_vaccinated,
+        death_rate_partially_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed_per_million, Vaccinated.new_vaccinations_smoothed_per_million,
                                                                    Date.date, Location.location).\
             join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id).\
             join(Date, Date.date_id == Location.location_date_id).\

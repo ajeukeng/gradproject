@@ -13,22 +13,22 @@ def home():
 
 @app.route("/vaccinated_deaths")
 def vaccinated_deaths():
-    query_data = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/test_db.db"). \
+    query_data = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db"). \
         get_death_rate_partially_vaccinated()
 
     df = pd.read_sql(query_data.statement,
                      con=qd(
-                         db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/test_db.db").session.bind)
-    df['new_deaths'] = df['new_deaths'].fillna(0)
-    df['people_vaccinated'] = df['people_vaccinated'].fillna(0)
-    vaccinated = df['people_vaccinated'].tolist()
+                         db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db").session.bind)
+    df['new_deaths_smoothed_per_million'] = df['new_deaths_smoothed_per_million'].fillna(0)
+    df['new_vaccinations_smoothed_per_million'] = df['new_vaccinations_smoothed_per_million'].fillna(0)
+    vaccinated = df['new_vaccinations_smoothed_per_million'].tolist()
     labels = df["date"].tolist()
-    values = df["new_deaths"].tolist()
+    values = df["new_deaths_smoothed_per_million"].tolist()
     print(labels)
     print(values)
 
-    return render_template('vaccinated_deaths.html', max= 300000000, values=values[351:], labels=labels[351:],
-                           vaccinated= vaccinated[351:])
+    return render_template('vaccinated_deaths.html', max=20000, values=values[351:], labels=labels[351:],
+                           vaccinated=vaccinated[351:])
 
 
 @app.route("/about")
