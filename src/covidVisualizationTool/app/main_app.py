@@ -36,5 +36,35 @@ def about():
     return render_template('about.html')
 
 
+@app.route("/positive_rate_by_population_density")
+def positive_rate_by_population_density():
+    return render_template('positive_rate_by_population_density.html')
+
+
+@app.route("/median_age_death_rate")
+def median_age_death_rate():
+    return render_template('median_age_death_rate.html')
+
+
+@app.route("/positive_rate_for_total_tests")
+def positive_rate_for_total_tests():
+    return render_template('positive_rate_for_total_tests.html')
+
+
+@app.route("/icu_patients_vaccinations")
+def icu_patients_vaccinations():
+    return render_template('icu_patients_vaccinations.html')
+
+
+@app.route("/boosted_positive_rate")
+def boosted_positive_rate():
+    return render_template('boosted_positive_rate.html')
+
+
+@app.route("/population_vaccinated")
+def population_vaccinated():
+    return render_template('population_vaccinated.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)

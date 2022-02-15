@@ -44,7 +44,7 @@ class QueryData(dbBase):
         """Query to retrieve number median age vs number of deaths over time"""
         pass
 
-    def get_positive_rate_for_total_test(self):
+    def get_positive_rate_for_total_tests(self):
         """Query to retrieve the number of positive tests vs total tests"""
         pass
 
