@@ -21,12 +21,14 @@ def vaccinated_deaths():
                          db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/test_db.db").session.bind)
     df['new_deaths'] = df['new_deaths'].fillna(0)
     df['people_vaccinated'] = df['people_vaccinated'].fillna(0)
+    vaccinated = df['people_vaccinated'].tolist()
     labels = df["date"].tolist()
     values = df["new_deaths"].tolist()
     print(labels)
     print(values)
 
-    return render_template('vaccinated_deaths.html', max= 8000, values=values, labels=labels)
+    return render_template('vaccinated_deaths.html', max= 300000000, values=values[351:], labels=labels[351:],
+                           vaccinated= vaccinated[351:])
 
 
 @app.route("/about")
