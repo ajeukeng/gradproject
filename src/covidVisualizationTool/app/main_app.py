@@ -26,7 +26,7 @@ def vaccinated_deaths():
     print(labels)
     print(values)
 
-    return render_template('vaccinated_deaths.html', max= 10000, values=values, labels=labels)
+    return render_template('vaccinated_deaths.html', max= 8000, values=values, labels=labels)
 
 
 @app.route("/about")
