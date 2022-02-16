@@ -13,17 +13,14 @@ def home():
 
 @app.route("/vaccinated_deaths")
 def vaccinated_deaths():
-    query_data = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db"). \
+    death_rate_partially_vaccinated_df = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db"). \
         get_death_rate_partially_vaccinated()
 
-    df = pd.read_sql(query_data.statement,
-                     con=qd(
-                         db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db").session.bind)
-    df['new_deaths_smoothed_per_million'] = df['new_deaths_smoothed_per_million'].fillna(0)
-    df['new_vaccinations_smoothed_per_million'] = df['new_vaccinations_smoothed_per_million'].fillna(0)
-    vaccinated = df['new_vaccinations_smoothed_per_million'].tolist()
-    labels = df["date"].tolist()
-    values = df["new_deaths_smoothed_per_million"].tolist()
+    death_rate_partially_vaccinated_df['new_deaths_smoothed_per_million'] = death_rate_partially_vaccinated_df['new_deaths_smoothed_per_million'].fillna(0)
+    death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'] = death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'].fillna(0)
+    vaccinated = death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
+    labels = death_rate_partially_vaccinated_df["date"].tolist()
+    values = death_rate_partially_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
     print(labels)
     print(values)
 

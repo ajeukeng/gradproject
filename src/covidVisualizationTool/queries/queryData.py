@@ -28,10 +28,10 @@ class QueryData(dbBase):
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id).\
             filter(Location.location.like('United States')).distinct()
         # TODO: Could be used for logging
-        df = pd.read_sql(death_rate_partially_vaccinated_query.statement, con=self.session.bind)
-        print(df)
+        death_rate_partially_vaccinated_df = pd.read_sql(death_rate_partially_vaccinated_query.statement, con=self.session.bind)
+        print(death_rate_partially_vaccinated_df)
 
-        return death_rate_partially_vaccinated_query
+        return death_rate_partially_vaccinated_df
 
     def get_death_rate_fully_vaccinated(self):
         """Query to retrieve the death rate vs number of fully vaccinated individuals over time"""
@@ -44,10 +44,10 @@ class QueryData(dbBase):
             join(Location, Location.location_population_id == Population.population_id). \
             join(Positive, Positive.positive_id == Location.location_positive_id).distinct()
         # TODO: Could be used for logging
-        df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
-        print(df)
+        positive_rate_by_population_df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
+        print(positive_rate_by_population_df)
 
-        return positive_rate_by_population_query
+        return positive_rate_by_population_df
 
     def get_median_age_death_rate(self):
         """Query to retrieve number median age vs number of deaths over time"""
@@ -57,22 +57,22 @@ class QueryData(dbBase):
         # TODO: Could be used for logging
         df = pd.read_sql(median_age_death_rate_query.statement, con=self.session.bind)
         all_locations = df['location'].unique()
-        updated_df = pd.DataFrame(columns=['median_age', 'total_deaths', 'location'])
+        median_age_death_rate_df = pd.DataFrame(columns=['median_age', 'total_deaths', 'location'])
 
         for location in all_locations:
             for index in df.index:
                 if df['location'][index] == location:
                     dict_row = {'median_age': df['median_age'][index], 'total_deaths': df['total_deaths'][index],
                                 'location': df['location'][index]}
-                    print(dict_row)
                     self.last_row_median_age_dict = dict_row
 
             df2 = pd.DataFrame([self.last_row_median_age_dict])
-            updated_df = pd.concat([updated_df, df2], ignore_index=True)
+            median_age_death_rate_df = pd.concat([median_age_death_rate_df, df2], ignore_index=True)
 
-        print(updated_df)
+        print(median_age_death_rate_df)
+        # TODO: Remove rows from df with NANs
 
-        return median_age_death_rate_query
+        return median_age_death_rate_df
 
     def get_positive_rate_for_total_tests(self):
         """Query to retrieve the number of positive tests vs total tests"""
