@@ -13,19 +13,18 @@ def home():
 
 @app.route("/vaccinated_deaths")
 def vaccinated_deaths():
-    death_rate_partially_vaccinated_df = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-test.db"). \
-        get_death_rate_partially_vaccinated()
+    death_rate_fully_vaccinated_df = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt"
+                                                    "-test.db"). \
+        get_death_rate_fully_vaccinated()
 
-    death_rate_partially_vaccinated_df['new_deaths_smoothed_per_million'] = death_rate_partially_vaccinated_df['new_deaths_smoothed_per_million'].fillna(0)
-    death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'] = death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'].fillna(0)
-    vaccinated = death_rate_partially_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
-    labels = death_rate_partially_vaccinated_df["date"].tolist()
-    values = death_rate_partially_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
+    vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
+    labels = death_rate_fully_vaccinated_df["date"].tolist()
+    values = death_rate_fully_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
     print(labels)
     print(values)
 
-    return render_template('vaccinated_deaths.html', max=20000, values=values[351:], labels=labels[351:],
-                           vaccinated=vaccinated[351:])
+    return render_template('vaccinated_deaths.html', max=20000, values=values, labels=labels,
+                           vaccinated=vaccinated)
 
 
 @app.route("/about")

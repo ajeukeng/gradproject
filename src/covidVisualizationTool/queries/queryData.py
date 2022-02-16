@@ -1,3 +1,5 @@
+import datetime
+
 import pandas as pd
 
 from covidVisualizationTool.imports.base import dbBase
@@ -9,6 +11,8 @@ class QueryData(dbBase):
         super().__init__(db_location)
         self.db_location = db_location
         self.last_row_median_age_dict = {}
+        self.average_positivity_rate_dict = {}
+        self.population_density = None
 
     def get_all_data(self):
         """Query to retrieve all distinct artifacts"""
@@ -19,22 +23,38 @@ class QueryData(dbBase):
 
         return all_data_list
 
+    def get_death_rate_fully_vaccinated(self):
+        """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
+        death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed_per_million,
+                                                               Vaccinated.new_vaccinations_smoothed_per_million,
+                                                               Date.date, Location.location). \
+            join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id). \
+            join(Date, Date.date_id == Location.location_date_id). \
+            join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
+            filter(Location.location.like('United States')).distinct()
+        death_rate_fully_vaccinated_df = pd.read_sql(death_rate_fully_vaccinated_query.statement,
+                                                     con=self.session.bind)
+        # Replacing all NANs with 0s
+        death_rate_fully_vaccinated_df['new_deaths_smoothed_per_million'] = death_rate_fully_vaccinated_df[
+            'new_deaths_smoothed_per_million'].fillna(0)
+        death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'] = death_rate_fully_vaccinated_df[
+            'new_vaccinations_smoothed_per_million'].fillna(0)
+
+        # Remove dates prior to when people started getting vaccinated
+        death_rate_fully_vaccinated_df['date'] = pd.to_datetime(death_rate_fully_vaccinated_df['date'],
+                                                                format='%Y-%m-%d')
+        death_rate_fully_vaccinated_df = death_rate_fully_vaccinated_df.loc[(death_rate_fully_vaccinated_df['date'] >=
+                                                                             '2020-12-13')]
+        # Converts date field back to string instead of datetime
+        death_rate_fully_vaccinated_df['date'] = death_rate_fully_vaccinated_df['date'].astype('string')
+
+        # TODO: Could be used for logging
+        print(death_rate_fully_vaccinated_df)
+
+        return death_rate_fully_vaccinated_df
+
     def get_death_rate_partially_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        death_rate_partially_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed_per_million, Vaccinated.new_vaccinations_smoothed_per_million,
-                                                                   Date.date, Location.location).\
-            join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id).\
-            join(Date, Date.date_id == Location.location_date_id).\
-            join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id).\
-            filter(Location.location.like('United States')).distinct()
-        # TODO: Could be used for logging
-        death_rate_partially_vaccinated_df = pd.read_sql(death_rate_partially_vaccinated_query.statement, con=self.session.bind)
-        print(death_rate_partially_vaccinated_df)
-
-        return death_rate_partially_vaccinated_df
-
-    def get_death_rate_fully_vaccinated(self):
-        """Query to retrieve the death rate vs number of fully vaccinated individuals over time"""
         pass
 
     def get_positive_rate_by_population_density(self):
@@ -43,8 +63,31 @@ class QueryData(dbBase):
                                                                Location.location). \
             join(Location, Location.location_population_id == Population.population_id). \
             join(Positive, Positive.positive_id == Location.location_positive_id).distinct()
+        df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
+        df = df.dropna()
+
+        all_locations = df['location'].unique()
+        positive_rate_by_population_df = pd.DataFrame()
+        # Counter for the number of positive_rate data points
+        counter = 0
+        positive_rate = 0
+
+        for location in all_locations:
+            for index in df.index:
+                if df['location'][index] == location:
+                    positive_rate += df['positive_rate'][index]
+                    self.population_density = df['population_density'][index]
+                    counter += 1
+            # Gets the average positive_rate for each country
+            self.average_positivity_rate_dict = {'population_density': self.population_density,
+                                                 'average_positive_rate': positive_rate/counter,
+                                                 'location': location}
+            counter = 0
+            positive_rate = 0
+            df2 = pd.DataFrame([self.average_positivity_rate_dict])
+            positive_rate_by_population_df = pd.concat([positive_rate_by_population_df, df2], ignore_index=True)
+
         # TODO: Could be used for logging
-        positive_rate_by_population_df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
         print(positive_rate_by_population_df)
 
         return positive_rate_by_population_df
@@ -54,11 +97,12 @@ class QueryData(dbBase):
         median_age_death_rate_query = self.session.query(Age.median_age, Deaths.total_deaths, Location.location). \
             join(Deaths, Deaths.deaths_id == Age.age_deaths_id). \
             join(Location, Location.location_age_id == Age.age_id).distinct()
-        # TODO: Could be used for logging
         df = pd.read_sql(median_age_death_rate_query.statement, con=self.session.bind)
         all_locations = df['location'].unique()
         median_age_death_rate_df = pd.DataFrame(columns=['median_age', 'total_deaths', 'location'])
 
+        # Loops through all the location (aka countries) then checks total deaths for that country and
+        # takes the last total deaths which is the largest
         for location in all_locations:
             for index in df.index:
                 if df['location'][index] == location:
@@ -69,8 +113,8 @@ class QueryData(dbBase):
             df2 = pd.DataFrame([self.last_row_median_age_dict])
             median_age_death_rate_df = pd.concat([median_age_death_rate_df, df2], ignore_index=True)
 
+        median_age_death_rate_df = median_age_death_rate_df.dropna()
         print(median_age_death_rate_df)
-        # TODO: Remove rows from df with NANs
 
         return median_age_death_rate_df
 
