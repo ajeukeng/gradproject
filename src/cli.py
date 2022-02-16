@@ -27,7 +27,8 @@ def import_data(csv_location, db_name: str):
 def query_data(db_name: str):
     if cu.check_path(db_name):
         query_stuff = QD(db_location=db_name)
-        print(query_stuff.get_all_data())
         query_stuff.get_death_rate_partially_vaccinated()
+        query_stuff.get_positive_rate_by_population_density()
+        query_stuff.get_median_age_death_rate()
     else:
         print("Unable to find database")
