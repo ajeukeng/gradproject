@@ -36,7 +36,7 @@ python3 -m venv venv
 pip install --user --editable .
 ```
 
-##Usage
+## Usage
 - Use `cvt` to run the application
   - import-data: Imports data from csv file into database
     - `cvt import-data CSV_FILENAME DATEBASE`
