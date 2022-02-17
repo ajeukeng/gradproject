@@ -124,9 +124,13 @@ class Date(Base):
     __tablename__ = 'date'
     date_id = Column(Integer, primary_key=True, autoincrement=True)
     date = Column('date', String(100), nullable=False)
+    date_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
+    date_vaccinated_id = Column(Integer, ForeignKey('vaccinated.vaccinated_id'))
 
-    def __init__(self, date):
+    def __init__(self, date, date_positive_id, date_vaccinated_id):
         self.date = date
+        self.date_positive_id = date_positive_id
+        self.date_vaccinated_id = date_vaccinated_id
 
 
 class Age(Base):
@@ -179,10 +183,12 @@ class Boosted(Base):
     boosted_id = Column(Integer, primary_key=True, autoincrement=True)
     total_boosters = Column('total_boosters', Integer, nullable=True)
     total_boosters_per_hundred = Column('total_boosters_per_hundred', Integer, nullable=True)
+    boosted_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
 
-    def __init__(self, total_boosters, total_boosters_per_hundred):
+    def __init__(self, total_boosters, total_boosters_per_hundred, boosted_positive_id):
         self.total_boosters = total_boosters
         self.total_boosters_per_hundred = total_boosters_per_hundred
+        self.boosted_positive_id = boosted_positive_id
 
 
 class ICU(Base):

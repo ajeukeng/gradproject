@@ -26,9 +26,13 @@ def import_data(csv_location, db_name: str):
 @click.argument('db_name')
 def query_data(db_name: str):
     if cu.check_path(db_name):
-        query_stuff = QD(db_location=db_name)
-        query_stuff.get_death_rate_partially_vaccinated()
-        query_stuff.get_positive_rate_by_population_density()
-        query_stuff.get_median_age_death_rate()
+        query_covid_data = QD(db_location=db_name)
+        query_covid_data.get_death_rate_fully_vaccinated()
+        query_covid_data.get_positive_rate_by_population_density()
+        query_covid_data.get_median_age_death_rate()
+        query_covid_data.get_positive_rate_for_total_tests()
+        query_covid_data.get_icu_patients_vaccinations()
+        query_covid_data.get_boosted_positive_rate()
+        query_covid_data.get_population_vaccinated()
     else:
         print("Unable to find database")

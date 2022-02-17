@@ -64,17 +64,10 @@ class ImportData(dbBase):
 
             self.add_new_row(population)
 
-            date = Date(date=row['date'])
-            self.add_new_row(date)
-
             age = Age(median_age=row['median_age'], aged_65_older=row['aged_65_older'],
                       aged_70_older=row['aged_70_older'], age_deaths_id=deaths.deaths_id)
 
             self.add_new_row(age)
-
-            boosted = Boosted(total_boosters=row['total_boosters'],
-                              total_boosters_per_hundred=row['total_boosters_per_hundred'])
-            self.add_new_row(boosted)
 
             icu = ICU(icu_patients=row['icu_patients'], icu_patients_per_million=row['icu_patients_per_million'],
                       weekly_icu_admissions=row['weekly_icu_admissions'],
@@ -93,6 +86,14 @@ class ImportData(dbBase):
             positive = Positive(positive_rate=row['positive_rate'], tests_positive_id=tests.tests_id)
 
             self.add_new_row(positive)
+
+            boosted = Boosted(total_boosters=row['total_boosters'],
+                              total_boosters_per_hundred=row['total_boosters_per_hundred'],
+                              boosted_positive_id=positive.positive_id)
+            self.add_new_row(boosted)
+
+            date = Date(date=row['date'], date_positive_id=positive.positive_id, date_vaccinated_id=vaccinated.vaccinated_id)
+            self.add_new_row(date)
 
             location = Location(location=row['location'], continent=row['continent'], location_cases_id=cases.cases_id,
                                 location_tests_id=tests.tests_id, location_deaths_id=deaths.deaths_id,

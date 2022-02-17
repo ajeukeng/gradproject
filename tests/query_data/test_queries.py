@@ -3,7 +3,7 @@ from covidVisualizationTool.imports.models import Population, Positive, Location
 from covidVisualizationTool.queries.queryData import QueryData
 import pandas as pd
 
-db_location = get_file_from_path('../docs/cvt-test.db', __file__)
+db_location = get_file_from_path('../docs/cvt-updated.db', __file__)
 qd = QueryData(db_location)
 
 
@@ -17,7 +17,7 @@ def test_simple_query():
 def test_deaths_vaccinated():
     # Testing the number of deaths vs number of people vaccinated
     vaccinated_deaths = qd.get_death_rate_fully_vaccinated()
-    assert vaccinated_deaths.shape == (748, 4)
+    assert vaccinated_deaths.shape == (427, 4)
 
 
 def test_positive_rate_by_population_density():
@@ -40,3 +40,29 @@ def test_median_age_total_deaths():
     # Testing the number of deaths vs the median age
     median_age_total_deaths = qd.get_median_age_death_rate()
     assert median_age_total_deaths.shape == (185, 3)
+
+
+def test_positive_rate_for_total_tests():
+    # Testing if the positivity rate increases with the total number of tests
+    positive_rate_for_total_tests = qd.get_positive_rate_for_total_tests()
+    assert positive_rate_for_total_tests.shape == (704, 4)
+
+
+def test_icu_patients_vaccinations():
+    # Testing if the number of icu patients decreases with the number of vaccinations administered
+    icu_patients_vaccinations = qd.get_icu_patients_vaccinations()
+
+    assert icu_patients_vaccinations.shape == (426, 4)
+
+
+def test_boosted_positive_rate():
+    # Testing if the positivity rate decreases with more people getting boosted
+    boosted_positive_rate = qd.get_boosted_positive_rate()
+
+    assert boosted_positive_rate.shape == (180, 4)
+
+
+def test_population_vaccinated():
+    # Testing if a higher population means fewer people get vaccinated
+    population_vaccinated = qd.get_population_vaccinated()
+    assert population_vaccinated.shape == (204, 4)
