@@ -19,7 +19,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                <a class="nav-link" href="{{ url_for('vaccinated_deaths') }}">New Deaths vs People Vaccinated</a>
+                <a class="nav-link" href="{{ url_for('positive_rate_by_population_density') }}">Positivity Rate by Population Density</a>
+                <a class="nav-link" href="{{ url_for('median_age_death_rate') }}">Death Rate by Median Age</a>
+                <a class="nav-link" href="{{ url_for('positive_rate_for_total_tests') }}">Positivity Rate for Total Tests</a>
+                <a class="nav-link" href="{{ url_for('icu_patients_vaccinations') }}">ICU Patients vs Total Vaccinations</a>
+                <a class="nav-link" href="{{ url_for('boosted_positive_rate') }}">Boosted Positivity Rate</a>
+                <a class="nav-link" href="{{ url_for('population_vaccinated') }}">Country Population vs Total Vaccinated</a>
             </li>
             </ul>
         </div>
