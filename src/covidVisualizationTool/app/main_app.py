@@ -16,11 +16,11 @@ def vaccinated_deaths():
 
     vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
     labels = death_rate_fully_vaccinated_df["date"].tolist()
-    values = death_rate_fully_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
+    deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
     print(labels)
-    print(values)
+    print(deaths)
 
-    return render_template('vaccinated_deaths.html', max=20000, values=values, labels=labels,
+    return render_template('vaccinated_deaths.html', deaths=deaths, labels=labels,
                            vaccinated=vaccinated)
 
 

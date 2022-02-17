@@ -33,7 +33,7 @@
         datasets: [{
             label: '# of Deaths',
             data: [
-            {% for item in values %}
+            {% for item in deaths %}
               {{ item*2000 }},
             {% endfor %}],
             borderWidth: 1,
