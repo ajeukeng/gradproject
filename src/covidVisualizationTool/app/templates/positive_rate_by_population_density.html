@@ -3,5 +3,74 @@
 {% block content %}
     <h1>{% block title %} Positivity Rate by Population Density {% endblock %}</h1>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+</head>
 
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="scatterChart" width="400" height="400"></canvas>
+
+    <script>
+        var population_density = {{population_density | tojson}};
+        var positive_rate = {{positive_rate | tojson}};
+        var labels = {{labels | tojson}};
+
+        var chartData = {
+            datasets: [{
+              label: 'Country',
+              backgroundColor:"red",
+              data: []
+            }]
+          }
+        for (var i = 0; i < population_density.length; i++) {
+          chartData.datasets[0].data.push(
+            {
+              x: population_density[i],
+              y: positive_rate[i]
+            }
+          )
+        }
+
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+
+        const chart = new Chart(ctx, {
+          type: 'scatter',
+          data: chartData,
+          options: {
+             tooltips: {
+                 callbacks: {
+                    label: function(tooltipItem, data) {
+                       var label = labels[tooltipItem.index];
+                       return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                    }
+                 }
+              },
+             scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: "Positivity Rate"
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: "Population Density"
+                }
+              }]
+            }
+          }
+      });
+    </script>
+  </center>
+</body>
+</html>
 {% endblock %}

@@ -16,7 +16,7 @@ def vaccinated_deaths():
 
     vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
     labels = death_rate_fully_vaccinated_df["date"].tolist()
-    deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed_per_million"].tolist()
+    deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed"].tolist()
     print(labels)
     print(deaths)
 
@@ -32,9 +32,13 @@ def about():
 @app.route("/positive_rate_by_population_density")
 def positive_rate_by_population_density():
     positive_rate_by_population_density_df = query_data.get_positive_rate_by_population_density()
+    countries = positive_rate_by_population_density_df['location'].tolist()
+    population_density = positive_rate_by_population_density_df['population_density'].tolist()
+    positive_rate = positive_rate_by_population_density_df['average_positive_rate'].tolist()
 
     return render_template('positive_rate_by_population_density.html',
-                           results=positive_rate_by_population_density_df)
+                           results=positive_rate_by_population_density_df, labels=countries,
+                           population_density=population_density, positive_rate=positive_rate)
 
 
 @app.route("/median_age_death_rate")

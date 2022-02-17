@@ -26,7 +26,7 @@ class QueryData(dbBase):
 
     def get_death_rate_fully_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed_per_million,
+        death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed,
                                                                Vaccinated.new_vaccinations_smoothed_per_million,
                                                                Date.date, Location.location). \
             join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id). \
@@ -77,6 +77,12 @@ class QueryData(dbBase):
             positive_rate = 0
             df2 = pd.DataFrame([self.average_positivity_rate_dict])
             positive_rate_by_population_df = pd.concat([positive_rate_by_population_df, df2], ignore_index=True)
+
+        positive_rate_by_population_df = positive_rate_by_population_df.sort_values('population_density',
+                                                                                     ascending=False)
+
+        # Removing outliers
+        positive_rate_by_population_df = positive_rate_by_population_df[7:]
 
         # TODO: Could be used for logging
         print(positive_rate_by_population_df)
