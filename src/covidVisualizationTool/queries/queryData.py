@@ -78,6 +78,12 @@ class QueryData(dbBase):
             df2 = pd.DataFrame([self.average_positivity_rate_dict])
             positive_rate_by_population_df = pd.concat([positive_rate_by_population_df, df2], ignore_index=True)
 
+        positive_rate_by_population_df = positive_rate_by_population_df.sort_values('population_density',
+                                                                                     ascending=False)
+
+        # Removing outliers
+        positive_rate_by_population_df = positive_rate_by_population_df[7:]
+
         # TODO: Could be used for logging
         print(positive_rate_by_population_df)
 
