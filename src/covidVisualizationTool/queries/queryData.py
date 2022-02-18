@@ -26,7 +26,7 @@ class QueryData(dbBase):
 
     def get_death_rate_fully_vaccinated(self):
         """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed_per_million,
+        death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed,
                                                                Vaccinated.new_vaccinations_smoothed_per_million,
                                                                Date.date, Location.location). \
             join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id). \
@@ -61,9 +61,9 @@ class QueryData(dbBase):
             join(Date, Date.date_positive_id == Positive.positive_id).distinct()
         df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
         df = df.dropna()
-
         # Gets the last row of each location based on date and resets index
         positive_rate_by_population_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+
         # TODO: Could be used for logging
         print(positive_rate_by_population_df)
 
