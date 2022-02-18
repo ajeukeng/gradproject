@@ -3,4 +3,71 @@
 {% block content %}
     <h1>{% block title %} Positivity Rate by Total Tests {% endblock %}</h1>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="multipleLineChart" width="1200" height="400"></canvas>
+
+    <script>
+
+    const ctx = document.getElementById('multipleLineChart').getContext('2d');
+
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of New Tests per Thousand',
+            data: [
+            {% for item in tests %}
+              {{ item }},
+            {% endfor %}],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'red'
+          },
+          {
+            label: '# Positive Tests',
+            data: [
+            {% for item in positive_rate %}
+              {{ item*10 }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'blue'
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
+    </script>
+  </center>
+</body>
+</html>
+
 {% endblock %}

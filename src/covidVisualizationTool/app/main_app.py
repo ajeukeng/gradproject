@@ -36,8 +36,7 @@ def positive_rate_by_population_density():
     population_density = positive_rate_by_population_density_df['population_density'].tolist()
     positive_rate = positive_rate_by_population_density_df['average_positive_rate'].tolist()
 
-    return render_template('positive_rate_by_population_density.html',
-                           results=positive_rate_by_population_density_df, labels=countries,
+    return render_template('positive_rate_by_population_density.html', labels=countries,
                            population_density=population_density, positive_rate=positive_rate)
 
 
@@ -45,14 +44,22 @@ def positive_rate_by_population_density():
 def median_age_death_rate():
     median_age_death_rate_df = query_data.get_median_age_death_rate()
 
-    return render_template('median_age_death_rate.html', results=median_age_death_rate_df)
+    age = median_age_death_rate_df['median_age'].tolist()
+    deaths = median_age_death_rate_df['total_deaths_per_million'].tolist()
+    countries = median_age_death_rate_df['location'].tolist()
+
+    return render_template('median_age_death_rate.html', age=age, deaths=deaths, labels=countries)
 
 
 @app.route("/positive_rate_for_total_tests")
 def positive_rate_for_total_tests():
     positive_rate_for_total_tests_df = query_data.get_positive_rate_for_total_tests()
 
-    return render_template('positive_rate_for_total_tests.html', results=positive_rate_for_total_tests_df)
+    positive_rate = positive_rate_for_total_tests_df['positive_rate'].tolist()
+    tests = positive_rate_for_total_tests_df['new_tests_per_thousand'].tolist()
+    date = positive_rate_for_total_tests_df['date'].tolist()
+
+    return render_template('positive_rate_for_total_tests.html', positive_rate=positive_rate, tests=tests, labels=date)
 
 
 @app.route("/icu_patients_vaccinations")
@@ -73,7 +80,12 @@ def boosted_positive_rate():
 def population_vaccinated():
     population_vaccinated_df = query_data.get_population_vaccinated()
 
-    return render_template('population_vaccinated.html', results=population_vaccinated_df)
+    population = population_vaccinated_df['population'].tolist()
+    vaccinated = population_vaccinated_df['total_vaccinations_per_hundred'].tolist()
+    countries = population_vaccinated_df['location'].tolist()
+
+    return render_template('population_vaccinated.html', population=population, vaccinated=vaccinated,
+                           labels=countries)
 
 
 if __name__ == "__main__":

@@ -57,12 +57,39 @@ class QueryData(dbBase):
                                                                Date.date,
                                                                Location.location). \
             join(Location, Location.location_population_id == Population.population_id). \
-            join(Positive, Positive.positive_id == Location.location_positive_id).\
+            join(Positive, Positive.positive_id == Location.location_positive_id). \
             join(Date, Date.date_positive_id == Positive.positive_id).distinct()
         df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
         df = df.dropna()
-        # Gets the last row of each location based on date and resets index
-        positive_rate_by_population_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+        positive_rate_by_population_df = pd.DataFrame(columns=['population_density', 'average_positive_rate',
+                                                               'location'])
+        all_locations = df['location'].unique()
+        # Used to get most recent positive_rate based on date
+        df_w_last_positive_rate = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+        for location in all_locations:
+            count_result = df['location'].value_counts()[location]
+
+            # Gets sum of the positive rate of each location
+            df_to_get_sum_of_each_positive_rate = df.groupby(['location']).positive_rate.sum().reset_index()
+            positive_sum = df_to_get_sum_of_each_positive_rate.loc[df_to_get_sum_of_each_positive_rate['location']
+                                                                   == location, 'positive_rate'].iloc[0]
+
+            pop_density = \
+            df_w_last_positive_rate.loc[df_w_last_positive_rate['location'] == location, 'population_density'].iloc[0]
+
+            self.average_positivity_rate_dict = {'population_density': pop_density,
+                                                 'average_positive_rate': int(positive_sum) / count_result,
+                                                 'location': location}
+
+            df2 = pd.DataFrame([self.average_positivity_rate_dict])
+            positive_rate_by_population_df = pd.concat([positive_rate_by_population_df, df2], ignore_index=True)
+
+        # Ordered by population density
+        positive_rate_by_population_df = positive_rate_by_population_df.sort_values('population_density',
+                                                                                    ascending=False)
+
+        # Removing outliers
+        positive_rate_by_population_df = positive_rate_by_population_df[7:]
 
         # TODO: Could be used for logging
         print(positive_rate_by_population_df)
@@ -91,7 +118,8 @@ class QueryData(dbBase):
 
     def get_positive_rate_for_total_tests(self):
         """Query to retrieve the number of positive tests vs total tests"""
-        positive_rate_for_total_tests_query = self.session.query(Positive.positive_rate, Tests.new_tests_per_thousand, Date.date,
+        positive_rate_for_total_tests_query = self.session.query(Positive.positive_rate, Tests.new_tests_per_thousand,
+                                                                 Date.date,
                                                                  Location.location). \
             join(Tests, Tests.tests_id == Positive.tests_positive_id). \
             join(Date, Date.date_positive_id == Positive.positive_id). \
@@ -155,6 +183,16 @@ class QueryData(dbBase):
 
         # Gets the last row of each location based on date and resets index
         population_vaccinated_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+
+        # Drop date column
+        population_vaccinated_df.drop('date', axis=1, inplace=True)
+
+        # Ordered by population
+        population_vaccinated_df = population_vaccinated_df.sort_values('population',
+                                                                        ascending=False)
+
+        # Removing outliers
+        population_vaccinated_df = population_vaccinated_df[10:]
 
         print(population_vaccinated_df)
 
