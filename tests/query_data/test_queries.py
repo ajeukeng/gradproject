@@ -33,13 +33,13 @@ def test_positive_rate_by_population_density():
 
     positive_rate_by_population_density = qd.get_positive_rate_by_population_density()
 
-    assert positive_rate_by_population_density.shape == (138, 3)
+    assert positive_rate_by_population_density.shape == (138, 4)
 
 
 def test_median_age_total_deaths():
     # Testing the number of deaths vs the median age
     median_age_total_deaths = qd.get_median_age_death_rate()
-    assert median_age_total_deaths.shape == (185, 3)
+    assert median_age_total_deaths.shape == (186, 3)
 
 
 def test_positive_rate_for_total_tests():
