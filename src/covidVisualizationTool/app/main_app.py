@@ -1,8 +1,11 @@
 from flask import Flask, render_template
+
+from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-query_data = qd(db_location="/Users/lizjeukeng/PycharmProjects/UmassD/gradproject/docs/cvt-updated.db")
+db_location = get_file_from_path('../../../docs/cvt-updated.db', __file__)
+query_data = qd(db_location=db_location)
 
 
 @app.route("/", methods=("POST", "GET"))
@@ -65,15 +68,22 @@ def positive_rate_for_total_tests():
 @app.route("/icu_patients_vaccinations")
 def icu_patients_vaccinations():
     icu_patients_vaccinations_df = query_data.get_icu_patients_vaccinations()
+    patients = icu_patients_vaccinations_df['icu_patients_per_million'].tolist()
+    date = icu_patients_vaccinations_df['date'].tolist()
+    vaccinated = icu_patients_vaccinations_df['new_vaccinations_smoothed_per_million'].tolist()
 
-    return render_template('icu_patients_vaccinations.html', results=icu_patients_vaccinations_df)
+    return render_template('icu_patients_vaccinations.html', labels=date, patients=patients, vaccinated=vaccinated)
 
 
 @app.route("/boosted_positive_rate")
 def boosted_positive_rate():
     boosted_positive_rate_df = query_data.get_boosted_positive_rate()
 
-    return render_template('boosted_positive_rate.html', results=boosted_positive_rate_df)
+    boosted = boosted_positive_rate_df['total_boosters_per_hundred'].tolist()
+    positive = boosted_positive_rate_df['positive_rate'].tolist()
+    date = boosted_positive_rate_df['date'].tolist()
+
+    return render_template('boosted_positive_rate.html', labels=date, positive=positive, boosted=boosted)
 
 
 @app.route("/population_vaccinated")
