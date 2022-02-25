@@ -17,13 +17,16 @@
   <center>
     <h1>{{ title }}</h1>
 
-    <canvas id="multipleLineChart" width="1200" height="400"></canvas>
+    <canvas id="icuLineChart" width="1200" height="400"></canvas>
+    <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
 
     <script>
 
-    const ctx = document.getElementById('multipleLineChart').getContext('2d');
+    const ctxI = document.getElementById('icuLineChart').getContext('2d');
+    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
 
-    const chart = new Chart(ctx, {
+
+    const icuLineChart = new Chart(ctxI, {
       type: 'line',
       data: {
         labels: [
@@ -32,7 +35,7 @@
           {% endfor %}
         ],
         datasets: [{
-            label: '# of ICU Patients per Million',
+            label: '# of COVID-19 patients in intensive care units (ICU) Patients per Million',
             data: [
             {% for item in patients %}
               {{ item*10 }},
@@ -40,7 +43,20 @@
             borderWidth: 1,
             fill: false,
             borderColor: 'red'
-          },
+          }
+        ]
+      },
+    });
+
+    const vaccinatedLineChart = new Chart(ctxV, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [
           {
             label: '# New Vaccinations per Day per Million',
             data: [
@@ -54,15 +70,6 @@
           }
         ]
       },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
     });
 
     </script>
