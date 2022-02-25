@@ -129,12 +129,14 @@ class Date(Base):
     date_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
     date_vaccinated_id = Column(Integer, ForeignKey('vaccinated.vaccinated_id'))
     date_deaths_id = Column(Integer, ForeignKey('deaths.deaths_id'))
+    date_stringency_id = Column(Integer, ForeignKey('stringency.stringency_id'))
 
-    def __init__(self, date, date_positive_id, date_vaccinated_id, date_deaths_id):
+    def __init__(self, date, date_positive_id, date_vaccinated_id, date_deaths_id, date_stringency_id):
         self.date = date
         self.date_positive_id = date_positive_id
         self.date_vaccinated_id = date_vaccinated_id
         self.date_deaths_id = date_deaths_id
+        self.date_stringency_id = date_stringency_id
 
 
 class Age(Base):
@@ -244,6 +246,8 @@ class Stringency(Base):
     __tablename__ = 'stringency'
     stringency_id = Column(Integer, primary_key=True, nullable=False)
     stringency_index = Column('stringency_index', Integer, nullable=True)
+    stringency_deaths_id = Column(Integer, ForeignKey('deaths.deaths_id'))
 
-    def __init__(self, stringency_index):
+    def __init__(self, stringency_index, stringency_deaths_id):
         self.stringency_index = stringency_index
+        self.stringency_deaths_id = stringency_deaths_id

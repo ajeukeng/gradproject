@@ -92,12 +92,13 @@ class ImportData(dbBase):
                               boosted_positive_id=positive.positive_id)
             self.add_new_row(boosted)
 
-            date = Date(date=row['date'], date_positive_id=positive.positive_id,
-                        date_vaccinated_id=vaccinated.vaccinated_id, date_deaths_id=deaths.deaths_id)
-            self.add_new_row(date)
-
-            stringency = Stringency(stringency_index=row['stringency_index'])
+            stringency = Stringency(stringency_index=row['stringency_index'], stringency_deaths_id=deaths.deaths_id)
             self.add_new_row(stringency)
+
+            date = Date(date=row['date'], date_positive_id=positive.positive_id,
+                        date_vaccinated_id=vaccinated.vaccinated_id, date_deaths_id=deaths.deaths_id,
+                        date_stringency_id=stringency.stringency_id)
+            self.add_new_row(date)
 
             location = Location(location=row['location'], continent=row['continent'], location_cases_id=cases.cases_id,
                                 location_tests_id=tests.tests_id, location_deaths_id=deaths.deaths_id,
