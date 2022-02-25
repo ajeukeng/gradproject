@@ -19,7 +19,7 @@
     <canvas id="scatterChart" width="400" height="400"></canvas>
 
     <script>
-        var age = {{age | tojson}};
+        var stringency = {{stringency | tojson}};
         var deaths = {{deaths | tojson}};
         var labels = {{labels | tojson}};
 
@@ -30,10 +30,10 @@
               data: []
             }]
           }
-        for (var i = 0; i < age.length; i++) {
+        for (var i = 0; i < stringency.length; i++) {
           chartData.datasets[0].data.push(
             {
-              x: age[i],
+              x: stringency[i],
               y: deaths[i]
             }
           )
@@ -63,7 +63,7 @@
               xAxes: [{
                 scaleLabel: {
                   display: true,
-                  labelString: "Median Age"
+                  labelString: "Stringency Index"
                 }
               }]
             },

@@ -4,7 +4,7 @@ from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-db_location = get_file_from_path('../../../docs/cvt-updated.db', __file__)
+db_location = get_file_from_path('../../../docs/cvt-2-24-2022.db', __file__)
 query_data = qd(db_location=db_location)
 
 
@@ -82,8 +82,10 @@ def boosted_positive_rate():
     boosted = boosted_positive_rate_df['total_boosters_per_hundred'].tolist()
     positive = boosted_positive_rate_df['positive_rate'].tolist()
     date = boosted_positive_rate_df['date'].tolist()
+    vaccinated = boosted_positive_rate_df['new_vaccinations_smoothed_per_million'].tolist()
 
-    return render_template('boosted_positive_rate.html', labels=date, positive=positive, boosted=boosted)
+    return render_template('boosted_positive_rate.html', labels=date, positive=positive, boosted=boosted,
+                           vaccinated=vaccinated)
 
 
 @app.route("/population_vaccinated")
@@ -100,8 +102,13 @@ def population_vaccinated():
 
 @app.route("/lockdown_deaths")
 def lockdown_deaths():
-    pass
-    return render_template('lockdown_deaths.html')
+    lockdown_deaths_df = query_data.get_stringency_death_rate()
+
+    deaths = lockdown_deaths_df['total_deaths_per_million'].tolist()
+    stringency = lockdown_deaths_df['stringency_index'].tolist()
+    countries = lockdown_deaths_df['location'].tolist()
+
+    return render_template('lockdown_deaths.html', deaths=deaths, stringency=stringency, labels=countries)
 
 
 if __name__ == "__main__":

@@ -158,11 +158,13 @@ class QueryData(dbBase):
     def get_boosted_positive_rate(self):
         """Query to retrieve the number of boosted vs positivity rate over time"""
         boosted_positive_rate_query = self.session.query(Boosted.total_boosters_per_hundred,
+                                                         Vaccinated.new_vaccinations_smoothed_per_million,
                                                          Positive.positive_rate,
                                                          Date.date, Location.location). \
             join(Boosted, Boosted.boosted_id == Location.location_boosted_id). \
             join(Positive, Positive.positive_id == Boosted.boosted_positive_id). \
             join(Date, Date.date_positive_id == Positive.positive_id). \
+            join(Vaccinated, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
             filter(Location.location.like('United States')).distinct()
         boosted_positive_rate_df = pd.read_sql(boosted_positive_rate_query.statement,
                                                con=self.session.bind)
@@ -207,15 +209,16 @@ class QueryData(dbBase):
         stringency_death_rate_query = self.session.query(Deaths.total_deaths_per_million,
                                                          Stringency.stringency_index,
                                                          Date.date, Location.location). \
-            join(Deaths, Deaths.deaths_id == Location.location_date_id). \
+            join(Date, Date.date_id == Location.location_date_id).\
+            join(Deaths, Deaths.deaths_id == Date.date_deaths_id). \
             join(Stringency, Stringency.stringency_id == Location.location_stringency_id). \
-            join(Date, Date.date_id == Location.location_date_id).distinct()
+            filter(Location.location.like('United States')).distinct()
         df = pd.read_sql(stringency_death_rate_query.statement,
                          con=self.session.bind)
-        df = df.dropna()
+        stringency_death_rate_df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
-        stringency_death_rate_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+        #stringency_death_rate_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
 
         # Drop date column
         #stringency_death_rate_df.drop('date', axis=1, inplace=True)
