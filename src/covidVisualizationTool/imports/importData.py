@@ -106,7 +106,7 @@ class ImportData(dbBase):
                                 location_age_id=age.age_id, location_vaccinated_id=vaccinated.vaccinated_id,
                                 location_icu_id=icu.icu_id, location_hospital_id=hospital.hospital_id,
                                 location_positive_id=positive.positive_id, location_boosted_id=boosted.boosted_id,
-                                location_stringency_id=stringency.stringency_index)
+                                location_stringency_id=stringency.stringency_id)
 
             self.add_new_row(location)
 
