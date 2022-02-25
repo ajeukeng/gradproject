@@ -218,7 +218,7 @@ class QueryData(dbBase):
         stringency_death_rate_df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
-        # stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+        stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last', ignore_index=True)
 
         # Drop date column
         #stringency_death_rate_df.drop('date', axis=1, inplace=True)
