@@ -19,12 +19,16 @@
     <canvas id="deathsLineChart" width="1200" height="400"></canvas>
     <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
     <canvas id="boostedLineChart" width="1200" height="400"></canvas>
+    <canvas id="partiallyLineChart" width="1200" height="400"></canvas>
 
     <script>
 
-        const ctx = document.getElementById('multipleLineChart').getContext('2d');
+    const ctxD = document.getElementById('deathsLineChart').getContext('2d');
+    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
+    const ctxB = document.getElementById('boostedLineChart').getContext('2d');
+    const ctxP = document.getElementById('partiallyLineChart').getContext('2d');
 
-    const chart = new Chart(ctx, {
+    const deathsLineChart = new Chart(ctxD, {
       type: 'line',
       data: {
         labels: [
@@ -41,7 +45,44 @@
             borderWidth: 1,
             fill: false,
             borderColor: 'red'
-          },
+          }
+        ]
+      },
+    });
+
+    const partiallyLineChart = new Chart(ctxP, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [
+          {
+            label: '# of Partially Vaccinated per Hundred (with at least one vaccine dose)',
+            data: [
+            {% for item in partially_vaccinated %}
+              {{ item }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'grey'
+          }
+        ]
+      },
+    });
+
+    const vaccinatedLineChart = new Chart(ctxV, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [
           {
             label: '# of Fully Vaccinated per Million',
             data: [
@@ -55,16 +96,33 @@
           }
         ]
       },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
     });
+
+    const boostedLineChart = new Chart(ctxB, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [
+          {
+            label: '# of Boosted per Hundred',
+            data: [
+            {% for item in boosted %}
+              {{ item }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'green'
+          }
+        ]
+      },
+    });
+
+
 
     </script>
   </center>
