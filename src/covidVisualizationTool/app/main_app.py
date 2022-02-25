@@ -98,5 +98,11 @@ def population_vaccinated():
                            labels=countries)
 
 
+@app.route("/lockdown_deaths")
+def lockdown_deaths():
+    pass
+    return render_template('lockdown_deaths.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)

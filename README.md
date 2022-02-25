@@ -13,6 +13,7 @@
 - Does the number of ICU patients decrease when the vaccinations increase? 
 - Does the number of people boosted affect the positivity test rate? 
 - Does a smaller population mean more people get vaccinated? 
+- Do stricter lockdown policies mean fewer deaths?
 
 ## Create cvt development environment
 

@@ -17,13 +17,17 @@
   <center>
     <h1>{{ title }}</h1>
 
-    <canvas id="multipleLineChart" width="1200" height="400"></canvas>
+    <canvas id="testsLineChart" width="1200" height="400"></canvas>
+    <canvas id="positiveLineChart" width="1200" height="400"></canvas>
 
     <script>
 
-    const ctx = document.getElementById('multipleLineChart').getContext('2d');
+    const ctx = document.getElementById('testsLineChart').getContext('2d');
+    const ctx2 = document.getElementById('positiveLineChart').getContext('2d');
 
-    const chart = new Chart(ctx, {
+
+
+    const testsLineChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: [
@@ -40,12 +44,24 @@
             borderWidth: 1,
             fill: false,
             borderColor: 'red'
-          },
-          {
+          }
+        ]
+      },
+    });
+
+    const positiveLineChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
             label: '# Positive Tests',
             data: [
             {% for item in positive_rate %}
-              {{ item*10 }},
+              {{ item }},
             {% endfor %}
             ],
             borderWidth: 1,
@@ -54,15 +70,6 @@
           }
         ]
       },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
     });
 
     </script>
