@@ -21,10 +21,11 @@ class Location(Base):
     location_hospital_id = Column(Integer, ForeignKey('hospital.hospital_id'))
     location_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
     location_boosted_id = Column(Integer, ForeignKey('boosted.boosted_id'))
+    location_stringency_id = Column(Integer, ForeignKey('stringency.stringency_id'))
 
     def __init__(self, location, continent, location_cases_id, location_tests_id, location_deaths_id,
                  location_population_id, location_date_id, location_age_id, location_vaccinated_id, location_icu_id,
-                 location_hospital_id, location_positive_id, location_boosted_id):
+                 location_hospital_id, location_positive_id, location_boosted_id, location_stringency_id):
         self.location = location
         self.continent = continent
         self.location_cases_id = location_cases_id
@@ -38,6 +39,7 @@ class Location(Base):
         self.location_hospital_id = location_hospital_id
         self.location_positive_id = location_positive_id
         self.location_boosted_id = location_boosted_id
+        self.location_stringency_id = location_stringency_id
 
 
 class Cases(Base):
@@ -234,3 +236,12 @@ class Positive(Base):
     def __init__(self, positive_rate, tests_positive_id):
         self.positive_rate = positive_rate
         self.tests_positive_id = tests_positive_id
+
+
+class Stringency(Base):
+    __tablename__ = 'stringency'
+    stringency_id = Column(Integer, primary_key=True, nullable=False)
+    stringency_index = Column('stringency_index', Integer, nullable=True)
+
+    def __init__(self, stringency_index):
+        self.stringency_index = stringency_index
