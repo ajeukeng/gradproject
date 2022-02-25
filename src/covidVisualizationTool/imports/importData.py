@@ -92,7 +92,8 @@ class ImportData(dbBase):
                               boosted_positive_id=positive.positive_id)
             self.add_new_row(boosted)
 
-            date = Date(date=row['date'], date_positive_id=positive.positive_id, date_vaccinated_id=vaccinated.vaccinated_id)
+            date = Date(date=row['date'], date_positive_id=positive.positive_id,
+                        date_vaccinated_id=vaccinated.vaccinated_id, date_deaths_id=deaths.deaths_id)
             self.add_new_row(date)
 
             stringency = Stringency(stringency_index=row['stringency_index'])

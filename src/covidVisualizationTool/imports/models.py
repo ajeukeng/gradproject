@@ -128,11 +128,13 @@ class Date(Base):
     date = Column('date', String(100), nullable=False)
     date_positive_id = Column(Integer, ForeignKey('positive.positive_id'))
     date_vaccinated_id = Column(Integer, ForeignKey('vaccinated.vaccinated_id'))
+    date_deaths_id = Column(Integer, ForeignKey('deaths.deaths_id'))
 
-    def __init__(self, date, date_positive_id, date_vaccinated_id):
+    def __init__(self, date, date_positive_id, date_vaccinated_id, date_deaths_id):
         self.date = date
         self.date_positive_id = date_positive_id
         self.date_vaccinated_id = date_vaccinated_id
+        self.date_deaths_id = date_deaths_id
 
 
 class Age(Base):

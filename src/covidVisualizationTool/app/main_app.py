@@ -18,13 +18,13 @@ def vaccinated_deaths():
     death_rate_fully_vaccinated_df = query_data.get_death_rate_fully_vaccinated()
 
     vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
+    partially_vaccinated = death_rate_fully_vaccinated_df['people_vaccinated_per_hundred'].tolist()
     labels = death_rate_fully_vaccinated_df["date"].tolist()
     deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed"].tolist()
-    print(labels)
-    print(deaths)
+    boosted = death_rate_fully_vaccinated_df["total_boosters_per_hundred"].tolist()
 
     return render_template('vaccinated_deaths.html', deaths=deaths, labels=labels,
-                           vaccinated=vaccinated)
+                           vaccinated=vaccinated, boosted=boosted, partially_vaccinated=partially_vaccinated)
 
 
 @app.route("/about")

@@ -25,12 +25,15 @@ class QueryData(dbBase):
         return all_data_list
 
     def get_death_rate_fully_vaccinated(self):
-        """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
+        """Query to retrieve the death rate vs number of partially vaccinated individuals over time and boosted"""
         death_rate_fully_vaccinated_query = self.session.query(Deaths.new_deaths_smoothed,
+                                                               Vaccinated.people_vaccinated_per_hundred,
                                                                Vaccinated.new_vaccinations_smoothed_per_million,
+                                                               Boosted.total_boosters_per_hundred,
                                                                Date.date, Location.location). \
             join(Vaccinated, Deaths.death_vaccination_id == Vaccinated.vaccinated_id). \
             join(Date, Date.date_id == Location.location_date_id). \
+            join(Boosted, Boosted.boosted_id == Location.location_boosted_id). \
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
             filter(Location.location.like('United States')).distinct()
         death_rate_fully_vaccinated_df = pd.read_sql(death_rate_fully_vaccinated_query.statement,
@@ -75,7 +78,8 @@ class QueryData(dbBase):
                                                                    == location, 'positive_rate'].iloc[0]
 
             pop_density = \
-            df_w_last_positive_rate.loc[df_w_last_positive_rate['location'] == location, 'population_density'].iloc[0]
+                df_w_last_positive_rate.loc[df_w_last_positive_rate['location'] == location, 'population_density'].iloc[
+                    0]
 
             self.average_positivity_rate_dict = {'population_density': pop_density,
                                                  'average_positive_rate': int(positive_sum) / count_result,
@@ -197,3 +201,25 @@ class QueryData(dbBase):
         print(population_vaccinated_df)
 
         return population_vaccinated_df
+
+    def get_stringency_death_rate(self):
+        """Query to determine if lockdowns helped keep deaths down"""
+        stringency_death_rate_query = self.session.query(Deaths.total_deaths_per_million,
+                                                         Stringency.stringency_index,
+                                                         Date.date, Location.location). \
+            join(Deaths, Deaths.deaths_id == Location.location_date_id). \
+            join(Stringency, Stringency.stringency_id == Location.location_stringency_id). \
+            join(Date, Date.date_id == Location.location_date_id).distinct()
+        df = pd.read_sql(stringency_death_rate_query.statement,
+                         con=self.session.bind)
+        df = df.dropna()
+
+        # Gets the last row of each location based on date and resets index
+        stringency_death_rate_df = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+
+        # Drop date column
+        #stringency_death_rate_df.drop('date', axis=1, inplace=True)
+
+        print(stringency_death_rate_df)
+
+        return stringency_death_rate_df
