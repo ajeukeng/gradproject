@@ -4,6 +4,7 @@ from covidVisualizationTool.imports.base import dbBase
 import pandas as pd
 
 from covidVisualizationTool.imports.models import *
+from common_utilities import CommonUtilities as cu
 
 
 class ImportData(dbBase):
@@ -15,6 +16,7 @@ class ImportData(dbBase):
         self.csv_file = csv_file
         Base.metadata.create_all(self.engine)
         self.id_count = 1
+        self.cvt_logger = cu().cvt_logger()
 
     def load_tables(self):
         """load tables with data"""
@@ -118,12 +120,14 @@ class ImportData(dbBase):
         """Adds new row to database"""
         try:
             self.session.add(new_row)
+            self.cvt_logger('Added new row\n')
+            self.cvt_logger(new_row)
             self.session.commit()
             self.session.flush()
         except sqlite3.IntegrityError as e:
-            print(e)
+            self.cvt_logger.error(e)
         except Exception as e:
             self.session.rollback()
-            print(e)
+            self.cvt_logger.error(e)
             return False
         return True

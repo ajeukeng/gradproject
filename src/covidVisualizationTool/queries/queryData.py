@@ -1,9 +1,8 @@
-import datetime
-
 import pandas as pd
 
 from covidVisualizationTool.imports.base import dbBase
 from covidVisualizationTool.imports.models import *
+from common_utilities import CommonUtilities as cu
 
 
 class QueryData(dbBase):
@@ -14,6 +13,7 @@ class QueryData(dbBase):
         self.average_positivity_rate_dict = {}
         self.population_density = None
         self.last_row_population_total_vaccinations_dict = {}
+        self.cvt_logger = cu().cvt_logger()
 
     def get_all_data(self):
         """Query to retrieve all distinct artifacts"""
@@ -36,23 +36,22 @@ class QueryData(dbBase):
             join(Boosted, Boosted.boosted_id == Location.location_boosted_id). \
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
             filter(Location.location.like('United States')).distinct()
-        death_rate_fully_vaccinated_df = pd.read_sql(death_rate_fully_vaccinated_query.statement,
-                                                     con=self.session.bind)
+        df = pd.read_sql(death_rate_fully_vaccinated_query.statement,
+                         con=self.session.bind)
+        # Verifying df is not empty
+        if df.empty:
+            self.cvt_logger.error("Death rate vs Vaccinated dataframe is empty")
 
         # Removes all Nans
-        death_rate_fully_vaccinated_df = death_rate_fully_vaccinated_df.dropna()
+        death_rate_fully_vaccinated_df = df.dropna()
 
         # Reset Index
         death_rate_fully_vaccinated_df = death_rate_fully_vaccinated_df.reset_index(drop=True)
 
-        # TODO: Could be used for logging
-        print(death_rate_fully_vaccinated_df)
+        self.cvt_logger.info('Partially Vaccinated, Fully Vaccinated, and Boosted vs New Deaths\n')
+        self.cvt_logger.info(death_rate_fully_vaccinated_df)
 
         return death_rate_fully_vaccinated_df
-
-    def get_death_rate_partially_vaccinated(self):
-        """Query to retrieve the death rate vs number of partially vaccinated individuals over time"""
-        pass
 
     def get_positive_rate_by_population_density(self):
         """Query to retrieve positivity rate based on population density over time"""
@@ -63,6 +62,10 @@ class QueryData(dbBase):
             join(Positive, Positive.positive_id == Location.location_positive_id). \
             join(Date, Date.date_positive_id == Positive.positive_id).distinct()
         df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
+
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Positive Rate by Population Density dataframe is empty")
         df = df.dropna()
         positive_rate_by_population_df = pd.DataFrame(columns=['population_density', 'average_positive_rate',
                                                                'location'])
@@ -95,8 +98,8 @@ class QueryData(dbBase):
         # Removing outliers
         positive_rate_by_population_df = positive_rate_by_population_df[7:]
 
-        # TODO: Could be used for logging
-        print(positive_rate_by_population_df)
+        self.cvt_logger.info('Positivity Rate vs Population Density\n')
+        self.cvt_logger.info(positive_rate_by_population_df)
 
         return positive_rate_by_population_df
 
@@ -107,6 +110,9 @@ class QueryData(dbBase):
             join(Deaths, Deaths.deaths_id == Age.age_deaths_id). \
             join(Location, Location.location_age_id == Age.age_id).distinct()
         df = pd.read_sql(median_age_death_rate_query.statement, con=self.session.bind)
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Median Age vs Death Rate dataframe is empty")
         df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
@@ -115,8 +121,8 @@ class QueryData(dbBase):
         # Sorts by median age
         median_age_death_rate_df = median_age_death_rate_df.sort_values('total_deaths_per_million')
 
-        # TODO: Could be used for logging
-        print(median_age_death_rate_df)
+        self.cvt_logger.info('Median Age vs Death Rate\n')
+        self.cvt_logger.info(median_age_death_rate_df)
 
         return median_age_death_rate_df
 
@@ -129,11 +135,16 @@ class QueryData(dbBase):
             join(Date, Date.date_positive_id == Positive.positive_id). \
             join(Location, Location.location_positive_id == Positive.positive_id). \
             filter(Location.location.like('United States')).distinct()
-        positive_rate_for_total_tests_df = pd.read_sql(positive_rate_for_total_tests_query.statement,
-                                                       con=self.session.bind)
-        positive_rate_for_total_tests_df = positive_rate_for_total_tests_df.dropna()
+        df = pd.read_sql(positive_rate_for_total_tests_query.statement,
+                         con=self.session.bind)
 
-        print(positive_rate_for_total_tests_df)
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Positive Rate vs Total Tests dataframe is empty")
+        positive_rate_for_total_tests_df = df.dropna()
+
+        self.cvt_logger.info('Positivity Rate vs Total Tests\n')
+        self.cvt_logger.info(positive_rate_for_total_tests_df)
 
         return positive_rate_for_total_tests_df
 
@@ -146,12 +157,17 @@ class QueryData(dbBase):
             join(Date, Vaccinated.vaccinated_id == Date.date_vaccinated_id). \
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
             filter(Location.location.like('United States')).distinct()
-        icu_patients_vaccinations_df = pd.read_sql(icu_patients_vaccinations_query.statement,
-                                                   con=self.session.bind)
+        df = pd.read_sql(icu_patients_vaccinations_query.statement,
+                         con=self.session.bind)
 
-        icu_patients_vaccinations_df = icu_patients_vaccinations_df.dropna()
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("ICU patients vs Vaccinations dataframe is empty")
 
-        print(icu_patients_vaccinations_df)
+        icu_patients_vaccinations_df = df.dropna()
+
+        self.cvt_logger.info('ICU Patients vs Vaccinations\n')
+        self.cvt_logger.info(icu_patients_vaccinations_df)
 
         return icu_patients_vaccinations_df
 
@@ -166,12 +182,17 @@ class QueryData(dbBase):
             join(Date, Date.date_positive_id == Positive.positive_id). \
             join(Vaccinated, Vaccinated.vaccinated_id == Location.location_vaccinated_id). \
             filter(Location.location.like('United States')).distinct()
-        boosted_positive_rate_df = pd.read_sql(boosted_positive_rate_query.statement,
-                                               con=self.session.bind)
+        df = pd.read_sql(boosted_positive_rate_query.statement,
+                         con=self.session.bind)
 
-        boosted_positive_rate_df = boosted_positive_rate_df.dropna()
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Boosted vs Positive Rate dataframe is empty")
 
-        print(boosted_positive_rate_df)
+        boosted_positive_rate_df = df.dropna()
+
+        self.cvt_logger.info('Boosted vs Positivity Rate\n')
+        self.cvt_logger.info(boosted_positive_rate_df)
 
         return boosted_positive_rate_df
 
@@ -185,6 +206,10 @@ class QueryData(dbBase):
             join(Location, Vaccinated.vaccinated_id == Location.location_vaccinated_id).distinct()
         df = pd.read_sql(population_vaccinated_query.statement,
                          con=self.session.bind)
+
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Population vs Vaccinated dataframe is empty")
         df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
@@ -200,7 +225,8 @@ class QueryData(dbBase):
         # Removing outliers
         population_vaccinated_df = population_vaccinated_df[10:]
 
-        print(population_vaccinated_df)
+        self.cvt_logger.info('Population vs Vaccination Rate\n')
+        self.cvt_logger.info(population_vaccinated_df)
 
         return population_vaccinated_df
 
@@ -212,16 +238,24 @@ class QueryData(dbBase):
                                                          Date.date,
                                                          Location.location). \
             join(Location, Location.location_deaths_id == Deaths.deaths_id). \
-            join(Stringency, Stringency.stringency_id == Location.location_stringency_id) .\
-            join(Date, Date.date_stringency_id == Stringency.stringency_id).\
+            join(Stringency, Stringency.stringency_id == Location.location_stringency_id). \
+            join(Date, Date.date_stringency_id == Stringency.stringency_id). \
             join(Cases, Cases.cases_id == Location.location_cases_id).distinct()
         df = pd.read_sql(stringency_death_rate_query.statement,
                          con=self.session.bind)
+
+        # Verifying dataframe is not empty
+        if df.empty:
+            self.cvt_logger.error("Stringency vs Death Rate dataframe is empty")
         stringency_death_rate_df = df.dropna()
 
-        # Gets the last row of each location based on date and resets index
-        stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last', ignore_index=True)
+        stringency_death_rate_df.groupby(['location'])['stringency_index'].mean()
 
-        print(stringency_death_rate_df)
+        # Gets the last row of each location based on date and resets index
+        stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last',
+                                                                            ignore_index=True)
+
+        self.cvt_logger.info('Stringency vs Death Rate and Cases\n')
+        self.cvt_logger.info(stringency_death_rate_df)
 
         return stringency_death_rate_df
