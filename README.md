@@ -38,11 +38,14 @@ pip install --user --editable .
 ```
 
 ## Usage
-- Use `cvt` to run the application
+- Use `cvt` to run the cli application
   - import-data: Imports data from csv file into database
     - `cvt import-data CSV_FILENAME DATEBASE`
   - query-data: Completes SQL queries on database
     - `cvt query-data DATABASE`
+
+- To run the web application
+  - `python src/covidVisualizationTool/app/main_app.py`
 
 #### Updating requirements.txt
 
