@@ -107,8 +107,11 @@ def lockdown_deaths():
     deaths = lockdown_deaths_df['total_deaths_per_million'].tolist()
     stringency = lockdown_deaths_df['stringency_index'].tolist()
     countries = lockdown_deaths_df['location'].tolist()
+    cases = lockdown_deaths_df['total_cases_per_million'].tolist()
+    scaled_cases = [i/10000 for i in cases]
 
-    return render_template('lockdown_deaths.html', deaths=deaths, stringency=stringency, labels=countries)
+    return render_template('lockdown_deaths.html', deaths=deaths, stringency=stringency, labels=countries,
+                           cases=scaled_cases)
 
 
 if __name__ == "__main__":

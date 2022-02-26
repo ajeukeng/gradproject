@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Stringency Index by Deaths per Million {% endblock %}</h1>
+    <h1>{% block title %} Stringency Index by Deaths per Million with Total Cases per Million {% endblock %}</h1>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,11 +14,11 @@
 
 <body>
   <center>
-    <h1>{{ title }}</h1>
 
     <canvas id="scatterChart" width="400" height="400"></canvas>
 
     <script>
+        var cases = {{cases | tojson}};
         var stringency = {{stringency | tojson}};
         var deaths = {{deaths | tojson}};
         var labels = {{labels | tojson}};
@@ -26,7 +26,8 @@
         var chartData = {
             datasets: [{
               label: 'Country',
-              backgroundColor:"blue",
+              backgroundColor: "rgba(60,186,159,0.2)",
+              borderColor: "rgba(60,186,159,1)",
               data: []
             }]
           }
@@ -34,7 +35,8 @@
           chartData.datasets[0].data.push(
             {
               x: stringency[i],
-              y: deaths[i]
+              y: deaths[i],
+              r: cases[i]
             }
           )
         }
@@ -42,7 +44,7 @@
         const ctx = document.getElementById('scatterChart').getContext('2d');
 
         const chart = new Chart(ctx, {
-          type: 'scatter',
+          type: 'bubble',
           data: chartData,
           options: {
              tooltips: {

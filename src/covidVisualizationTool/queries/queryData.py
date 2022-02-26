@@ -208,20 +208,19 @@ class QueryData(dbBase):
         """Query to determine if lockdowns helped keep deaths down"""
         stringency_death_rate_query = self.session.query(Deaths.total_deaths_per_million,
                                                          Stringency.stringency_index,
+                                                         Cases.total_cases_per_million,
                                                          Date.date,
                                                          Location.location). \
             join(Location, Location.location_deaths_id == Deaths.deaths_id). \
             join(Stringency, Stringency.stringency_id == Location.location_stringency_id) .\
-            join(Date, Date.date_stringency_id == Stringency.stringency_id).distinct()
+            join(Date, Date.date_stringency_id == Stringency.stringency_id).\
+            join(Cases, Cases.cases_id == Location.location_cases_id).distinct()
         df = pd.read_sql(stringency_death_rate_query.statement,
                          con=self.session.bind)
         stringency_death_rate_df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
         stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last', ignore_index=True)
-
-        # Drop date column
-        #stringency_death_rate_df.drop('date', axis=1, inplace=True)
 
         print(stringency_death_rate_df)
 
