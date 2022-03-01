@@ -3,4 +3,90 @@
 {% block content %}
     <h1>{% block title %} Death Rate by Median Age {% endblock %}</h1>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="scatterChart" width="400" height="400"></canvas>
+
+    <script>
+        var age = {{age | tojson}};
+        var deaths = {{deaths | tojson}};
+        var labels = {{labels | tojson}};
+
+        var chartData = {
+            datasets: [{
+              label: 'Country',
+              backgroundColor:"blue",
+              data: []
+            }]
+          }
+        for (var i = 0; i < age.length; i++) {
+          chartData.datasets[0].data.push(
+            {
+              x: age[i],
+              y: deaths[i]
+            }
+          )
+        }
+
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+
+        const chart = new Chart(ctx, {
+          type: 'scatter',
+          data: chartData,
+          options: {
+             tooltips: {
+                 callbacks: {
+                    label: function(tooltipItem, data) {
+                       var label = labels[tooltipItem.index];
+                       return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                    }
+                 }
+              },
+             scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: "Total Deaths per Million"
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: "Median Age"
+                }
+              }]
+            },
+            annotation: {
+              annotations: [{
+                type: 'line',
+                mode: 'horizontal',
+                scaleID: 'y-axis-0',
+                value: 2225,
+                endValue: 0,
+                borderColor: 'rgb(75, 192, 192)',
+                borderWidth: 4,
+                label: {
+                  enabled: true,
+                  content: 'Trendline',
+                  yAdjust: -16,
+                }
+              }]
+            }
+          }
+      });
+    </script>
+  </center>
+</body>
+</html>
 {% endblock %}

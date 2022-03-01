@@ -4,6 +4,7 @@ from covidVisualizationTool.imports.base import dbBase
 import pandas as pd
 
 from covidVisualizationTool.imports.models import *
+from common_utilities import CommonUtilities as cu
 
 
 class ImportData(dbBase):
@@ -15,6 +16,7 @@ class ImportData(dbBase):
         self.csv_file = csv_file
         Base.metadata.create_all(self.engine)
         self.id_count = 1
+        self.cvt_logger = cu().cvt_logger()
 
     def load_tables(self):
         """load tables with data"""
@@ -92,7 +94,12 @@ class ImportData(dbBase):
                               boosted_positive_id=positive.positive_id)
             self.add_new_row(boosted)
 
-            date = Date(date=row['date'], date_positive_id=positive.positive_id, date_vaccinated_id=vaccinated.vaccinated_id)
+            stringency = Stringency(stringency_index=row['stringency_index'], stringency_deaths_id=deaths.deaths_id)
+            self.add_new_row(stringency)
+
+            date = Date(date=row['date'], date_positive_id=positive.positive_id,
+                        date_vaccinated_id=vaccinated.vaccinated_id, date_deaths_id=deaths.deaths_id,
+                        date_stringency_id=stringency.stringency_id)
             self.add_new_row(date)
 
             location = Location(location=row['location'], continent=row['continent'], location_cases_id=cases.cases_id,
@@ -100,7 +107,8 @@ class ImportData(dbBase):
                                 location_population_id=population.population_id, location_date_id=date.date_id,
                                 location_age_id=age.age_id, location_vaccinated_id=vaccinated.vaccinated_id,
                                 location_icu_id=icu.icu_id, location_hospital_id=hospital.hospital_id,
-                                location_positive_id=positive.positive_id, location_boosted_id=boosted.boosted_id)
+                                location_positive_id=positive.positive_id, location_boosted_id=boosted.boosted_id,
+                                location_stringency_id=stringency.stringency_id)
 
             self.add_new_row(location)
 
@@ -112,12 +120,14 @@ class ImportData(dbBase):
         """Adds new row to database"""
         try:
             self.session.add(new_row)
+            self.cvt_logger('Added new row\n')
+            self.cvt_logger(new_row)
             self.session.commit()
             self.session.flush()
         except sqlite3.IntegrityError as e:
-            print(e)
+            self.cvt_logger.error(e)
         except Exception as e:
             self.session.rollback()
-            print(e)
+            self.cvt_logger.error(e)
             return False
         return True

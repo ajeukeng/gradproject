@@ -3,4 +3,78 @@
 {% block content %}
     <h1>{% block title %} ICU Patients vs Total Vaccinations {% endblock %}</h1>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="icuLineChart" width="1200" height="400"></canvas>
+    <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
+
+    <script>
+
+    const ctxI = document.getElementById('icuLineChart').getContext('2d');
+    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
+
+
+    const icuLineChart = new Chart(ctxI, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of COVID-19 patients in intensive care units (ICU) Patients per Million',
+            data: [
+            {% for item in patients %}
+              {{ item*10 }},
+            {% endfor %}],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'red'
+          }
+        ]
+      },
+    });
+
+    const vaccinatedLineChart = new Chart(ctxV, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [
+          {
+            label: '# New Vaccinations per Day per Million',
+            data: [
+            {% for item in vaccinated %}
+              {{ item }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'blue'
+          }
+        ]
+      },
+    });
+
+    </script>
+  </center>
+</body>
+</html>
+
 {% endblock %}
