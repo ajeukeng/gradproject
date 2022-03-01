@@ -34,5 +34,6 @@ def query_data(db_name: str):
         query_covid_data.get_icu_patients_vaccinations()
         query_covid_data.get_boosted_positive_rate()
         query_covid_data.get_population_vaccinated()
+        query_covid_data.get_stringency_death_rate()
     else:
         print("Unable to find database")

@@ -3,4 +3,78 @@
 {% block content %}
     <h1>{% block title %} Positivity Rate by Total Tests {% endblock %}</h1>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="testsLineChart" width="1200" height="400"></canvas>
+    <canvas id="positiveLineChart" width="1200" height="400"></canvas>
+
+    <script>
+
+    const ctx = document.getElementById('testsLineChart').getContext('2d');
+    const ctx2 = document.getElementById('positiveLineChart').getContext('2d');
+
+
+
+    const testsLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of New Tests per Thousand',
+            data: [
+            {% for item in tests %}
+              {{ item }},
+            {% endfor %}],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'red'
+          }
+        ]
+      },
+    });
+
+    const positiveLineChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# Positivity Rate',
+            data: [
+            {% for item in positive_rate %}
+              {{ item }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'blue'
+          }
+        ]
+      },
+    });
+
+    </script>
+  </center>
+</body>
+</html>
+
 {% endblock %}

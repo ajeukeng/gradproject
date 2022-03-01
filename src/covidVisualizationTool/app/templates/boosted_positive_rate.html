@@ -1,6 +1,102 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Boosted Positivity Rate {% endblock %}</h1>
+    <h1>{% block title %} Vaccinated and Boosted vs Positivity Rate {% endblock %}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+
+    <canvas id="positiveLineChart" width="1200" height="400"></canvas>
+    <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
+    <canvas id="boostedLineChart" width="1200" height="400"></canvas>
+
+    <script>
+
+    const ctxP = document.getElementById('positiveLineChart').getContext('2d');
+    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
+    const ctxB = document.getElementById('boostedLineChart').getContext('2d');
+
+
+    const positiveLineChart = new Chart(ctxP, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# Positivity Rate',
+            data: [
+            {% for item in positive %}
+              {{ item }},
+            {% endfor %}
+            ],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'red'
+          }
+        ]
+      }
+    });
+
+    const vaccinatedLineChart = new Chart(ctxV, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of New Vaccinations per Day per Million',
+            data: [
+            {% for item in vaccinated %}
+              {{ item }},
+            {% endfor %}],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'green'
+          }
+        ]
+      }
+    });
+
+    const boostedLineChart = new Chart(ctxB, {
+      type: 'line',
+      data: {
+        labels: [
+          {% for item in labels %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+        datasets: [{
+            label: '# of Boosters Administered per Day per Hundred',
+            data: [
+            {% for item in boosted %}
+              {{ item }},
+            {% endfor %}],
+            borderWidth: 1,
+            fill: false,
+            borderColor: 'blue'
+          }
+        ]
+      }
+    });
+
+    </script>
+  </center>
+</body>
+</html>
 
 {% endblock %}
