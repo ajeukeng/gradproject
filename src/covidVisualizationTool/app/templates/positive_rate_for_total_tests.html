@@ -58,10 +58,10 @@
           {% endfor %}
         ],
         datasets: [{
-            label: '# Positivity Rate',
+            label: '# Percentage of Positive Tests',
             data: [
             {% for item in positive_rate %}
-              {{ item }},
+              {{ item *100}},
             {% endfor %}
             ],
             borderWidth: 1,
