@@ -1,27 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} New Deaths vs People Vaccinated {% endblock %}</h1>
+<h1>{% block title %} New Deaths vs People Vaccinated {% endblock %}</h1>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>{{ title }}</title>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Test</title>
 </head>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <body>
-  <center>
-    <h1>{{ title }}</h1>
-
-    <canvas id="deathsLineChart" width="1200" height="400"></canvas>
-    <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
-    <canvas id="partiallyLineChart" width="1200" height="400"></canvas>
-    <canvas id="boostedLineChart" width="1200" height="400"></canvas>
-
-    <script>
+  <div>
+    <canvas id="deathsChart" width="1200" height="400"></canvas>
+    <canvas id="vaccinatedChart" width="1200" height="400"></canvas>
+    <canvas id="partiallyVaccinatedChart" width="1200" height="400"></canvas>
+    <canvas id="boostedChart" width="1200" height="400"></canvas>
+  </div>
+ <script>
 
     var labels = {{labels | tojson}};
     var vaccinated = {{vaccinated | tojson}};
@@ -29,126 +26,188 @@
     var boosted = {{boosted | tojson}};
     var deaths = {{deaths | tojson}};
 
-    let fctx = document.getElementById('vaccinatedChart');
+    let fctx = document.getElementById('vaccinatedChart').getContext('2d');
+    let pctx = document.getElementById('partiallyVaccinatedChart').getContext('2d');
+    let bctx = document.getElementById('boostedChart').getContext('2d');
+    let dctx = document.getElementById('deathsChart').getContext('2d');
 
-    const ctxD = document.getElementById('deathsLineChart').getContext('2d');
-    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
-    const ctxB = document.getElementById('boostedLineChart').getContext('2d');
-    const ctxP = document.getElementById('partiallyLineChart').getContext('2d');
 
-    var labels = {{labels | tojson}};
-    var vaccinated = {{vaccinated | tojson}};
-    var partially_vaccinated = {{partially_vaccinated | tojson}};
-    var boosted = {{boosted | tojson}};
-    let chartData = {}
-    chartData.label = []
-    chartData.time = []
+    let fvaxData = {}
+    fvaxData.label = []
+    fvaxData.time = []
     for (var i = 0; i < labels.length; i++) {
-      chartData.label.push(labels[i])
-      chartData.time.push(vaccinated[i])
+      fvaxData.label.push(labels[i])
+      fvaxData.time.push(vaccinated[i])
 
+    }
+    let pvaxData = {}
+    pvaxData.label = []
+    pvaxData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      pvaxData.label.push(labels[i])
+      pvaxData.time.push(partially_vaccinated[i])
+
+    }
+
+    let bvaxData = {}
+    bvaxData.label = []
+    bvaxData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      bvaxData.label.push(labels[i])
+      bvaxData.time.push(boosted[i])
+
+    }
+    let dvaxData = {}
+    dvaxData.label = []
+    dvaxData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      dvaxData.label.push(labels[i])
+      dvaxData.time.push(deaths[i])
+
+    }
+let deathsChart = new Chart(dctx, {
+  type: "line",
+  data: {
+  labels: dvaxData.label,
+  datasets: [{
+    label: '# of Deaths per Day',
+    data: dvaxData.time,
+    borderWidth: 1,
+    fill: false,
+    borderColor: 'red'
+    }]
+    },
+  options: {
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data){
+            return parseInt(tooltipItem.value)
+          }
         }
-
-
-    const deathsLineChart = new Chart(ctxD, {
-      type: 'line',
-      data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [{
-            label: '# of Deaths',
-            data: [
-            {% for item in deaths %}
-              {{ item }},
-            {% endfor %}],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'red'
-          }
-        ]
       },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          gridLines: {
+            display:true
+          },
+          time: {
+            minUnit: 'month'
+          }
+        }]
+      }
+    }
     });
 
-    const partiallyLineChart = new Chart(ctxP, {
-      type: 'line',
-      data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [
-          {
-            label: '# of Partially Vaccinated per Hundred (with at least one vaccine dose)',
-            data: [
-            {% for item in partially_vaccinated %}
-              {{ item }},
-            {% endfor %}
-            ],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'grey'
+let vaccinatedChart = new Chart(fctx, {
+  type: "line",
+  data: {
+  labels: fvaxData.label,
+  datasets: [{
+    label: '# of Fully Vaccinated per Million (with 2 shots of Moderna or Pfizer vaccine or 1 shot of J&J vaccine)',
+    data: fvaxData.time,
+    borderWidth: 1,
+    fill: false,
+    borderColor: 'blue'
+    }]
+    },
+  options: {
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data){
+            return parseInt(tooltipItem.value)
           }
-        ]
+        }
       },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          gridLines: {
+            display:true
+          },
+          time: {
+            minUnit: 'month'
+          }
+        }]
+      }
+    }
     });
 
-    const vaccinatedLineChart = new Chart(ctxV, {
-      type: 'line',
-      data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [
-          {
-            label: '# of Fully Vaccinated per Million',
-            data: [
-            {% for item in vaccinated %}
-              {{ item }},
-            {% endfor %}
-            ],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'blue'
+  let partiallyVaccinatedChart = new Chart(pctx, {
+  type: "line",
+  data: {
+  labels: pvaxData.label,
+  datasets: [{
+    label: '# of Partially Vaccinated per Hundred (with at least one dose  of mRNA vaccine)',
+    data: pvaxData.time,
+    borderWidth: 1,
+    fill: false,
+    borderColor: 'green'
+    }]
+    },
+  options: {
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data){
+            return parseInt(tooltipItem.value)
           }
-        ]
+        }
       },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          gridLines: {
+            display:true
+          },
+          time: {
+            minUnit: 'month'
+          }
+        }]
+      }
+    }
     });
 
-    const boostedLineChart = new Chart(ctxB, {
-      type: 'line',
-      data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [
-          {
-            label: '# of Boosted per Hundred',
-            data: [
-            {% for item in boosted %}
-              {{ item }},
-            {% endfor %}
-            ],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'green'
+  let boostedChart = new Chart(bctx, {
+  type: "line",
+  data: {
+  labels: bvaxData.label,
+  datasets: [{
+    label: '# of Boosted per Hundred',
+    data: bvaxData.time,
+    borderWidth: 1,
+    fill: false,
+    borderColor: 'grey'
+    }]
+    },
+  options: {
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data){
+            return parseInt(tooltipItem.value)
           }
-        ]
+        }
       },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          gridLines: {
+            display:true
+          },
+          time: {
+            minUnit: 'month'
+          }
+        }]
+      }
+    }
     });
 
 
 
-    </script>
-  </center>
+ </script>
 </body>
 </html>
-
 {% endblock %}
