@@ -23,6 +23,14 @@
 
     <script>
 
+    var labels = {{labels | tojson}};
+    var vaccinated = {{vaccinated | tojson}};
+    var partially_vaccinated = {{partially_vaccinated | tojson}};
+    var boosted = {{boosted | tojson}};
+    var deaths = {{deaths | tojson}};
+
+    let fctx = document.getElementById('vaccinatedChart');
+
     const ctxD = document.getElementById('deathsLineChart').getContext('2d');
     const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
     const ctxB = document.getElementById('boostedLineChart').getContext('2d');
