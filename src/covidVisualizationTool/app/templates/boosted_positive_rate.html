@@ -1,99 +1,167 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Vaccinated and Boosted vs Positivity Rate {% endblock %}</h1>
+<h1>{% block title %} Vaccinated and Boosted vs Positivity Rate {% endblock %}</h1>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <title>{{ title }}</title>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Vaccinated and Boosted vs Positivity Rate</title>
 </head>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <body>
-  <center>
-    <h1>{{ title }}</h1>
-
+  <div>
     <canvas id="positiveLineChart" width="1200" height="400"></canvas>
     <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>
     <canvas id="boostedLineChart" width="1200" height="400"></canvas>
-
+  </div>
     <script>
 
-    const ctxP = document.getElementById('positiveLineChart').getContext('2d');
-    const ctxV = document.getElementById('vaccinatedLineChart').getContext('2d');
-    const ctxB = document.getElementById('boostedLineChart').getContext('2d');
+
+    var labels = {{labels | tojson}};
+    var vaccinated = {{vaccinated | tojson}};
+    var positive = {{positive | tojson}};
+    var boosted = {{boosted | tojson}};
+
+    let pctx = document.getElementById('positiveLineChart').getContext('2d');
+    let vctx = document.getElementById('vaccinatedLineChart').getContext('2d');
+    let bctx = document.getElementById('boostedLineChart').getContext('2d');
 
 
-    const positiveLineChart = new Chart(ctxP, {
-      type: 'line',
+    let pData = {}
+    pData.label = []
+    pData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      pData.label.push(labels[i])
+      pData.time.push(positive[i] *100)
+
+    }
+
+    let vData = {}
+    vData.label = []
+    vData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      vData.label.push(labels[i])
+      vData.time.push(vaccinated[i])
+
+    }
+
+    let bData = {}
+    bData.label = []
+    bData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      bData.label.push(labels[i])
+      bData.time.push(boosted[i]*10000)
+
+    }
+
+
+    let positiveLineChart = new Chart(pctx, {
+      type: "line",
       data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [{
-            label: '# Positivity Rate',
-            data: [
-            {% for item in positive %}
-              {{ item }},
-            {% endfor %}
-            ],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'red'
+      labels: pData.label,
+      datasets: [{
+        label: '% of Positive Tests (PCR & Antigen) per Day',
+        data: pData.time,
+        borderWidth: 1,
+        fill: false,
+        borderColor: 'red'
+        }]
+        },
+      options: {
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data){
+                return parseInt(tooltipItem.value)
+              }
+            }
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              gridLines: {
+                display:true
+              },
+              time: {
+                minUnit: 'month'
+              }
+            }]
           }
-        ]
-      }
-    });
+        }
+        });
 
-    const vaccinatedLineChart = new Chart(ctxV, {
-      type: 'line',
+    let boostedLineChart = new Chart(bctx, {
+      type: "line",
       data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [{
-            label: '# of New Vaccinations per Day per Million',
-            data: [
-            {% for item in vaccinated %}
-              {{ item }},
-            {% endfor %}],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'green'
+      labels: bData.label,
+      datasets: [{
+        label: '# of Boosters Administered per Day per Million',
+        data: bData.time,
+        borderWidth: 1,
+        fill: false,
+        borderColor: 'blue'
+        }]
+        },
+      options: {
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data){
+                return parseInt(tooltipItem.value)
+              }
+            }
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              gridLines: {
+                display:true
+              },
+              time: {
+                minUnit: 'month'
+              }
+            }]
           }
-        ]
-      }
-    });
+        }
+      });
 
-    const boostedLineChart = new Chart(ctxB, {
-      type: 'line',
+    let vaccinatedLineChart = new Chart(vctx, {
+      type: "line",
       data: {
-        labels: [
-          {% for item in labels %}
-            "{{ item }}",
-          {% endfor %}
-        ],
-        datasets: [{
-            label: '# of Boosters Administered per Day per Hundred',
-            data: [
-            {% for item in boosted %}
-              {{ item }},
-            {% endfor %}],
-            borderWidth: 1,
-            fill: false,
-            borderColor: 'blue'
+      labels: vData.label,
+      datasets: [{
+        label: '# of New Vaccination doses per Day per Million',
+        data: vData.time,
+        borderWidth: 1,
+        fill: false,
+        borderColor: 'green'
+        }]
+        },
+      options: {
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data){
+                return parseInt(tooltipItem.value)
+              }
+            }
+          },
+          scales: {
+            xAxes: [{
+              type: 'time',
+              gridLines: {
+                display:true
+              },
+              time: {
+                minUnit: 'month'
+              }
+            }]
           }
-        ]
-      }
-    });
-
+        }
+      });
     </script>
   </center>
 </body>

@@ -10,12 +10,14 @@
   <title>{{ title }}</title>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
 </head>
 
 <body>
   <center>
 
-    <canvas id="scatterChart" width="400" height="400"></canvas>
+    <canvas id="bubbleChart" width="400" height="400"></canvas>
 
     <script>
         var cases = {{cases | tojson}};
@@ -41,12 +43,36 @@
           )
         }
 
-        const ctx = document.getElementById('scatterChart').getContext('2d');
+        const ctx = document.getElementById('bubbleChart').getContext('2d');
 
-        const chart = new Chart(ctx, {
+        const bubbleChart = new Chart(ctx, {
           type: 'bubble',
           data: chartData,
           options: {
+             plugins: { // Look at this bit
+                datalabels: {
+                    anchor: function(context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        return value.x < 50 ? 'end' : 'center';
+                    },
+                    align: function(context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        return value.x < 50 ? 'end' : 'center';
+                    },
+                    color: function(context) {
+                        var value = context.dataset.data[context.dataIndex];
+                        return value.x < 50 ? context.dataset.backgroundColor : 'white';
+                    },
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: function(value) {
+                        return Math.round(value.x);
+                    },
+                    offset: 2,
+                    padding: 0
+                }
+            },
              tooltips: {
                  callbacks: {
                     label: function(tooltipItem, data) {

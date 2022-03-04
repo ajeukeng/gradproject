@@ -249,7 +249,7 @@ class QueryData(dbBase):
             self.cvt_logger.error("Stringency vs Death Rate dataframe is empty")
         stringency_death_rate_df = df.dropna()
 
-        stringency_death_rate_df.groupby(['location'])['stringency_index'].mean()
+        stringency_death_rate_df.groupby(['location'])['stringency_index'].max()
 
         # Gets the last row of each location based on date and resets index
         stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last',
