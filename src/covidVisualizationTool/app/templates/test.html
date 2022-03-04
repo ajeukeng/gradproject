@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Test</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+<body>
+  <div>
+    <canvas id="vaccinatedChart" width="400" height="400"></canvas>
+  </div>
+ <script>
+
+    var labels = {{labels | tojson}};
+    var vaccinated = {{vaccinated | tojson}};
+    var partially_vaccinated = {{partially_vaccinated | tojson}};
+    var boosted = {{boosted | tojson}};
+    var deaths = {{deaths | tojson}};
+
+    let fctx = document.getElementById('vaccinatedChart');
+
+
+    let fvaxData = {}
+    fvaxData.label = []
+    fvaxData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      fvaxData.label.push(labels[i])
+      fvaxData.time.push(vaccinated[i])
+
+        }
+    let pvaxData = {}
+    pvaxData.label = []
+    pvaxData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      pvaxData.label.push(labels[i])
+      pvaxData.time.push(partially_vaccinated[i])
+
+        }
+
+let vaccinatedChart = new Chart(fctx, {
+  type: "line",
+  data: {
+  labels: fvaxData.label,
+  datasets: [{
+    label: fvaxData.label,
+    data: fvaxData.time,
+    borderWidth: 1,
+    fill: false,
+    borderColor: 'blue'
+    }]
+    },
+  options: {
+      responsive: true,
+      title: {
+        display: false
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data){
+            return parseInt(tooltipItem.value)
+          }
+        }
+      },
+      scales: {
+        xAxes: [{
+          type: 'time',
+          gridLines: {
+            display:true
+          },
+          time: {
+            minUnit: 'month'
+          }
+        }]
+      }
+    }
+    });
+
+ </script>
+</body>
+</html>

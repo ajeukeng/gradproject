@@ -108,10 +108,23 @@ def lockdown_deaths():
     stringency = lockdown_deaths_df['stringency_index'].tolist()
     countries = lockdown_deaths_df['location'].tolist()
     cases = lockdown_deaths_df['total_cases_per_million'].tolist()
-    scaled_cases = [i/10000 for i in cases]
+    scaled_cases = [i / 10000 for i in cases]
 
     return render_template('lockdown_deaths.html', deaths=deaths, stringency=stringency, labels=countries,
                            cases=scaled_cases)
+
+
+@app.route("/test")
+def test():
+    death_rate_fully_vaccinated_df = query_data.get_death_rate_fully_vaccinated()
+
+    vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
+    partially_vaccinated = death_rate_fully_vaccinated_df['people_vaccinated_per_hundred'].tolist()
+    labels = death_rate_fully_vaccinated_df["date"].tolist()
+    deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed"].tolist()
+    boosted = death_rate_fully_vaccinated_df["total_boosters_per_hundred"].tolist()
+    return render_template('test.html', labels=labels, vaccinated=vaccinated, partially_vaccinated=partially_vaccinated,
+                           deaths=deaths, boosted=boosted)
 
 
 if __name__ == "__main__":

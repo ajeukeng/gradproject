@@ -28,6 +28,20 @@
     const ctxB = document.getElementById('boostedLineChart').getContext('2d');
     const ctxP = document.getElementById('partiallyLineChart').getContext('2d');
 
+    var labels = {{labels | tojson}};
+    var vaccinated = {{vaccinated | tojson}};
+    var partially_vaccinated = {{partially_vaccinated | tojson}};
+    var boosted = {{boosted | tojson}};
+    let chartData = {}
+    chartData.label = []
+    chartData.time = []
+    for (var i = 0; i < labels.length; i++) {
+      chartData.label.push(labels[i])
+      chartData.time.push(vaccinated[i])
+
+        }
+
+
     const deathsLineChart = new Chart(ctxD, {
       type: 'line',
       data: {
