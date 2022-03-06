@@ -16,7 +16,7 @@
   <center>
     <h1>{{ title }}</h1>
 
-    <canvas id="scatterChart" width="400" height="400"></canvas>
+    <canvas id="bubbleChart" width="400" height="400"></canvas>
 
     <script>
         var age = {{age | tojson}};
@@ -26,7 +26,8 @@
         var chartData = {
             datasets: [{
               label: 'Country',
-              backgroundColor:"blue",
+              backgroundColor: "rgba(0,0,0,0.2)",
+              borderColor: "#000",
               data: []
             }]
           }
@@ -39,10 +40,10 @@
           )
         }
 
-        const ctx = document.getElementById('scatterChart').getContext('2d');
+        const ctx = document.getElementById('bubbleChart').getContext('2d');
 
-        const chart = new Chart(ctx, {
-          type: 'scatter',
+        const bubbleChart = new Chart(ctx, {
+          type: 'bubble',
           data: chartData,
           options: {
              tooltips: {
