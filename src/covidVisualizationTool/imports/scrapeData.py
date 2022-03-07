@@ -10,6 +10,7 @@ class ScrapeData:
     def __init__(self):
         self.data_url = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv'
         self.csv_filename = os.path.join('docs', f'cvt_raw_csv_{date.today()}.csv')
+        self.db_name = os.path.join('docs', f'cvt_{date.today()}.db')
         self.cvt_logger = cu().cvt_logger()
 
     def get_covid_data(self):

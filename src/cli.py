@@ -1,3 +1,4 @@
+
 import click
 from covidVisualizationTool.imports.importData import ImportData as ID
 import common_utilities as cu
@@ -47,5 +48,15 @@ def get_data():
 
 
 @cvt.command()
-def automated_data_scrape():
+def automated_import():
+    scrape_data = SD()
+    csv_filename = scrape_data.csv_filename
+    db_name = scrape_data.db_name
+    # Import Covid Dataset directly from new data
+    if cu.check_path(csv_filename):
+        scrape_data.get_covid_data()
+        id_covid = ID(csv_filename, db_name)
+        id_covid.load_tables()
 
+    else:
+        print("Unable to find path")
