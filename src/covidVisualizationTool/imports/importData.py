@@ -16,7 +16,6 @@ class ImportData(dbBase):
         self.csv_file = csv_file
         Base.metadata.create_all(self.engine)
         self.id_count = 1
-        self.cvt_logger = cu().cvt_logger()
 
     def load_tables(self):
         """load tables with data"""
@@ -120,14 +119,14 @@ class ImportData(dbBase):
         """Adds new row to database"""
         try:
             self.session.add(new_row)
-            self.cvt_logger('Added new row\n')
-            self.cvt_logger(new_row)
+            print('Added new row\n')
+            print(new_row)
             self.session.commit()
             self.session.flush()
         except sqlite3.IntegrityError as e:
-            self.cvt_logger.error(e)
+            print(e)
         except Exception as e:
             self.session.rollback()
-            self.cvt_logger.error(e)
+            print(e)
             return False
         return True
