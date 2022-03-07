@@ -2,6 +2,7 @@ import click
 from covidVisualizationTool.imports.importData import ImportData as ID
 import common_utilities as cu
 from covidVisualizationTool.queries.queryData import QueryData as QD
+from covidVisualizationTool.imports.scrapeData import ScrapeData as SD
 
 
 @click.group()
@@ -37,3 +38,14 @@ def query_data(db_name: str):
         query_covid_data.get_stringency_death_rate()
     else:
         print("Unable to find database")
+
+
+@cvt.command()
+def get_data():
+    scrape_data = SD()
+    scrape_data.get_covid_data()
+
+
+@cvt.command()
+def automated_data_scrape():
+

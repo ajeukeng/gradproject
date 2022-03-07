@@ -8,7 +8,7 @@ with open('LICENSE') as f:
 
 setup(
     name='cvt',
-    version='1.0',
+    version='2.0',
     description='Tool to View Covid Data',
     long_description=readme_content,
     author='Liz Argueta',
