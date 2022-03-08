@@ -53,8 +53,8 @@ def automated_import():
     csv_filename = scrape_data.csv_filename
     db_name = scrape_data.db_name
     # Import Covid Dataset directly from new data
+    scrape_data.get_covid_data()
     if cu.check_path(csv_filename):
-        scrape_data.get_covid_data()
         id_covid = ID(csv_filename, db_name)
         id_covid.load_tables()
 

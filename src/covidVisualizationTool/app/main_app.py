@@ -4,7 +4,7 @@ from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-db_location = get_file_from_path('../../../docs/cvt-2-25-2022.db', __file__)
+db_location = get_file_from_path('../../../docs/cvt_2022-03-06.db', __file__)
 query_data = qd(db_location=db_location)
 
 
@@ -112,19 +112,6 @@ def lockdown_deaths():
 
     return render_template('lockdown_deaths.html', deaths=deaths, stringency=stringency, labels=countries,
                            cases=scaled_cases)
-
-
-@app.route("/test")
-def test():
-    death_rate_fully_vaccinated_df = query_data.get_death_rate_fully_vaccinated()
-
-    vaccinated = death_rate_fully_vaccinated_df['new_vaccinations_smoothed_per_million'].tolist()
-    partially_vaccinated = death_rate_fully_vaccinated_df['people_vaccinated_per_hundred'].tolist()
-    labels = death_rate_fully_vaccinated_df["date"].tolist()
-    deaths = death_rate_fully_vaccinated_df["new_deaths_smoothed"].tolist()
-    boosted = death_rate_fully_vaccinated_df["total_boosters_per_hundred"].tolist()
-    return render_template('test.html', labels=labels, vaccinated=vaccinated, partially_vaccinated=partially_vaccinated,
-                           deaths=deaths, boosted=boosted)
 
 
 if __name__ == "__main__":
