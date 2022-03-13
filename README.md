@@ -43,6 +43,10 @@ pip install --user --editable .
     - `cvt import-data CSV_FILENAME DATEBASE`
   - query-data: Completes SQL queries on database
     - `cvt query-data DATABASE`
+  - get-data: Retrieves raw csv data directly from github repo
+    - `cvt get-data`
+  - automated-import: Retrieves raw data from site and imports data from csv file to database
+    - `cvt automated-import`
 
 - To run the web application
   - `python src/covidVisualizationTool/app/main_app.py`

@@ -45,7 +45,7 @@
     pvaxData.time = []
     for (var i = 0; i < labels.length; i++) {
       pvaxData.label.push(labels[i])
-      pvaxData.time.push(partially_vaccinated[i])
+      pvaxData.time.push(partially_vaccinated[i] * 100)
 
     }
 
@@ -54,7 +54,7 @@
     bvaxData.time = []
     for (var i = 0; i < labels.length; i++) {
       bvaxData.label.push(labels[i])
-      bvaxData.time.push(boosted[i])
+      bvaxData.time.push(boosted[i] * 100)
 
     }
     let dvaxData = {}
@@ -70,7 +70,7 @@ let deathsChart = new Chart(dctx, {
   data: {
   labels: dvaxData.label,
   datasets: [{
-    label: '# of Deaths per Day',
+    label: '# of Total Deaths per Day',
     data: dvaxData.time,
     borderWidth: 1,
     fill: false,
@@ -140,7 +140,7 @@ let vaccinatedChart = new Chart(fctx, {
   data: {
   labels: pvaxData.label,
   datasets: [{
-    label: '# of Partially Vaccinated per Hundred (with at least one dose  of mRNA vaccine)',
+    label: '# of Partially Vaccinated per Million (with at least one dose of mRNA vaccine)',
     data: pvaxData.time,
     borderWidth: 1,
     fill: false,
@@ -175,7 +175,7 @@ let vaccinatedChart = new Chart(fctx, {
   data: {
   labels: bvaxData.label,
   datasets: [{
-    label: '# of Boosted per Hundred',
+    label: '# of Boosted per Million',
     data: bvaxData.time,
     borderWidth: 1,
     fill: false,
