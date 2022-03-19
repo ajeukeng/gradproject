@@ -128,7 +128,7 @@ class QueryData(dbBase):
 
     def get_positive_rate_for_total_tests(self):
         """Query to retrieve the number of positive tests vs total tests"""
-        positive_rate_for_total_tests_query = self.session.query(Positive.positive_rate, Tests.new_tests_per_thousand,
+        positive_rate_for_total_tests_query = self.session.query(Positive.positive_rate, Tests.new_tests_smoothed,
                                                                  Date.date,
                                                                  Location.location). \
             join(Tests, Tests.tests_id == Positive.tests_positive_id). \

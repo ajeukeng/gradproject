@@ -4,7 +4,7 @@ from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-db_location = get_file_from_path('../../../docs/cvt_2022-03-06.db', __file__)
+db_location = get_file_from_path('../../../docs/cvt_2022-03-18.db', __file__)
 query_data = qd(db_location=db_location)
 
 
@@ -59,7 +59,7 @@ def positive_rate_for_total_tests():
     positive_rate_for_total_tests_df = query_data.get_positive_rate_for_total_tests()
 
     positive_rate = positive_rate_for_total_tests_df['positive_rate'].tolist()
-    tests = positive_rate_for_total_tests_df['new_tests_per_thousand'].tolist()
+    tests = positive_rate_for_total_tests_df['new_tests_smoothed'].tolist()
     date = positive_rate_for_total_tests_df['date'].tolist()
 
     return render_template('positive_rate_for_total_tests.html', positive_rate=positive_rate, tests=tests, labels=date)
