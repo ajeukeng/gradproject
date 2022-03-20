@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Positivity Rate by Total Tests{% endblock %}</h1>
+<h1>{% block title %} How Did the Number of Tests Affect the Positivity Rate? {% endblock %}</h1>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +17,10 @@
   The purpose of these charts is to answer the question of "Is the positivity rate higher when there are a higher
   number of new COVID-19 tests?" It is statistically evident that an increased number of tests also leads to an
   increased positivity rate. This could perhaps be attributed to asymptomatic individuals being required or encouraged
-  to get tested. These charts only feature data from the United States.
+  to get tested. The number of tests are the number of tests performed. The figures are the sum across states, some
+  of which may include serology tests in addition to PCR tests. Many commercial laboratories call it an antibody test.
+  An antibody test looks for the presence of antibodies, which are specific proteins made in response to infections. (CDC)
+  These charts only feature data from the United States.
 </div>
   <div>
     <canvas id="testsLineChart" width="1200" height="400"></canvas>
@@ -56,7 +59,7 @@
       data: {
       labels: tData.label,
       datasets: [{
-        label: '# of New Tests (PCR & Antigen) per Thousand',
+        label: '# of New Tests (PCR & Serology) per Thousand',
         data: tData.time,
         borderWidth: 1,
         fill: false,
