@@ -251,6 +251,8 @@ class QueryData(dbBase):
 
         stringency_death_rate_df.groupby(['location'])['stringency_index'].max()
 
+        stringency_death_rate_df.total_deaths_per_million = stringency_death_rate_df.total_deaths_per_million.round()
+
         # Gets the last row of each location based on date and resets index
         stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last',
                                                                             ignore_index=True)
