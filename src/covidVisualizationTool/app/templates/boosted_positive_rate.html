@@ -1,17 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Vaccinated and Boosted vs Positivity Rate {% endblock %}</h1>
+<h1>{% block title %} How Did the Number of People Vaccinated and Boosted Affect the Positivity Rate? {% endblock %}</h1>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Vaccinated and Boosted vs Positivity Rate</title>
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 <body>
+<HR>
+<div align="center" style="background-color:#F5F5F5">
+  The purpose of these charts is to answer the question of "Does the number of people partially vaccinated,
+  fully vaccinated, and boosted affect the positivity test rate?" Tests include establishing whether an individual is
+  currently infected through a Polymerase Chain Reaction (PCR) test or antigen test. These charts only feature data
+  from the United States.
+
+</div>
   <div>
     <canvas id="positiveLineChart" width="1200" height="400"></canvas>
     <canvas id="vaccinatedLineChart" width="1200" height="400"></canvas>

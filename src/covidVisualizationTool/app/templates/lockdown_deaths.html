@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Stringency Index by Deaths per Million with Total Cases per Million {% endblock %}</h1>
+    <h1>{% block title %} How Did Strict Lockdowns Affect Deaths and Cases? {% endblock %}</h1>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +15,17 @@
 </head>
 
 <body>
+<HR>
+<div align="center" style="background-color:#F5F5F5">
+  The purpose of these charts is to answer the question of "Did lockdowns help reduce deaths and cases?" The stringency
+  index or the government response index is a composite measure based on 9 response indicators including school
+  closures, workplace closures, and travel bans, rescaled to a value from 0 to 100, with 100 being the strictest
+  response. In the chart below, the green shaded bubbles represent different countries. When moused over, the
+  stringency index and total deaths per million are shown for each country. The size of the bubbles represents the
+  total number of cases for that country, to scale. The World Health Organization defines a confirmed case as “a
+  person with laboratory confirmation of COVID-19 infection.”
+
+</div>
   <center>
 
     <canvas id="bubbleChart" width="400" height="400"></canvas>
@@ -77,7 +88,7 @@
                  callbacks: {
                     label: function(tooltipItem, data) {
                        var label = labels[tooltipItem.index];
-                       return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                       return label + ': (Stringency Index: ' + tooltipItem.xLabel + ', Total Deaths per Million: ' + tooltipItem.yLabel + ')';
                     }
                  }
               },
