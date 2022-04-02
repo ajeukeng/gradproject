@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Country Population vs Number of Vaccinated{% endblock %}</h1>
+    <h1>{% block title %} How Does a Country's Population Affect the Number of People Vaccinated?{% endblock %}</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +11,15 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
 </head>
 <body>
-  <center>
-    <h1>{{ title }}</h1>
+<HR>
+<div id="paragraph" align="center" style="background-color:#F5F5F5">
+  The purpose of these charts is to answer the question of "Does a smaller population mean more people get vaccinated?"
+  The motivation behind this chart was the idea that smaller groups of people tend to think the same, while larger
+  groups are more likely to think differently from each other. The total of vaccinations are the total number of
+  COVID-19 vaccination doses administered per 100 people in the total population.
+  In the chart below, the green shaded bubbles represent different countries. When hovered over, the total population
+  and the total vaccinations per hundred are shown.
+</div>
 
     <canvas id="scatterChart" width="400" height="400"></canvas>
 
@@ -47,7 +54,7 @@
                  callbacks: {
                     label: function(tooltipItem, data) {
                        var label = labels[tooltipItem.index];
-                       return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                       return label + ': (Total Population: ' + tooltipItem.xLabel + ', Total Vaccinations per Hundred: ' + tooltipItem.yLabel + ')';
                     }
                  }
               },
