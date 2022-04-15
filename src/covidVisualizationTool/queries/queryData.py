@@ -173,11 +173,6 @@ class QueryData(dbBase):
         population_vaccinated_df = population_vaccinated_df.sort_values('population',
                                                                         ascending=False)
 
-        # Get ratio
-
-        population_vaccinated_df['Ratio'] = 1000 * population_vaccinated_df['total_vaccinations_per_hundred'] / \
-                                            population_vaccinated_df['population']
-
         # Removing outliers
         population_vaccinated_df = population_vaccinated_df[10:]
 
