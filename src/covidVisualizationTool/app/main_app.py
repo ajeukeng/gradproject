@@ -37,10 +37,10 @@ def positive_rate_by_population_density():
     positive_rate_by_population_density_df = query_data.get_positive_rate_by_population_density()
     countries = positive_rate_by_population_density_df['location'].tolist()
     population_density = positive_rate_by_population_density_df['population_density'].tolist()
-    positive_rate = positive_rate_by_population_density_df['average_positive_rate'].tolist()
+    vaccinated = positive_rate_by_population_density_df['total_vaccinations_per_hundred'].tolist()
 
     return render_template('positive_rate_by_population_density.html', labels=countries,
-                           population_density=population_density, positive_rate=positive_rate)
+                           population_density=population_density, vaccinated=vaccinated)
 
 
 @app.route("/median_age_death_rate")
