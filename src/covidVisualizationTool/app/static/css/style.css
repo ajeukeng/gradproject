@@ -103,3 +103,23 @@ h1 {
   background-color: #008CBA;
   color: white;
 }
+.columnleft {
+  float: left;
+  width: 40%;
+  padding: 10px;
+}
+.columnright {
+  float: right;
+  width: 40%;
+  padding: 10px;
+}
+.columnlockdown {
+  float: left;
+  width: 60%;
+  padding: 10px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
