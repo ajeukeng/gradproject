@@ -1,10 +1,9 @@
 import sqlite3
 
-from covidVisualizationTool.imports.base import dbBase
 import pandas as pd
 
+from covidVisualizationTool.imports.base import dbBase
 from covidVisualizationTool.imports.models import *
-from common_utilities import CommonUtilities as cu
 
 
 class ImportData(dbBase):

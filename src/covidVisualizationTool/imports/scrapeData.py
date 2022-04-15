@@ -1,8 +1,9 @@
+import csv
 import os
+from datetime import date
 
 import requests
-import csv
-from datetime import date
+
 from common_utilities import CommonUtilities as cu
 
 

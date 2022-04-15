@@ -1,9 +1,10 @@
 
 import click
-from covidVisualizationTool.imports.importData import ImportData as ID
+
 import common_utilities as cu
-from covidVisualizationTool.queries.queryData import QueryData as QD
+from covidVisualizationTool.imports.importData import ImportData as ID
 from covidVisualizationTool.imports.scrapeData import ScrapeData as SD
+from covidVisualizationTool.queries.queryData import QueryData as QD
 
 
 @click.group()

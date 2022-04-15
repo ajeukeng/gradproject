@@ -31,6 +31,7 @@ def vaccinated_deaths():
 def about():
     return render_template('about.html')
 
+
 @app.route("/median_age_death_rate")
 def median_age_death_rate():
     median_age_death_rate_df = query_data.get_median_age_death_rate()
