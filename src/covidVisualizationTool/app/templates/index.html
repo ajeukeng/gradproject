@@ -8,99 +8,91 @@
     by millions while positivity rate was measured in percentages. For this reason, it
     was not possible to have multiple graphs in one chart.
 </div>
-<div class="columnleft">
+<div class="row">
+
+<div class="column">
     <h3>Correlation between death rate, vaccinations, and boosters</h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the number of partially vaccinated, fully vaccinated,
         and boosted on the death rate. It was assumed that if more
         people are vaccinated and boosted, there would be fewer deaths.
-    </div>
+    </p>
 
 <a href="{{ url_for('vaccinated_deaths') }}">
         <button class="button button2" >Death Rate, Vaccinations, and Boosters </button>
 </a>
 
-</div>
 
-<div class="columnright">
     <h3>Correlation between median age and death rate</h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the median age of a country
         on the death rate. It was assumed that countries with a
         higher median age experienced a higher death rate.
-    </div>
+    </p>
 <a href="{{ url_for('median_age_death_rate') }}">
         <button class="button button2" type="button" role="button">Median Age and Death Rate </button>
 </a>
-</div>
 
-<div class="columnleft">
     <h3>Correlation between Covid-19 test positivity rate and total tests</h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the number of Covid-19 tests taken and the number
             of positive tests. It was assumed that when more Covid-19 tests
             are administered the positivity rate of these tests increases.
-    </div>
+    </p>
 <a href="{{ url_for('positive_rate_for_total_tests') }}">
         <button class="button button2" type="button" role="button">Positivity Rate and Total Tests </button>
 </a>
-</div>
 
-<div class="columnright">
     <h3>Correlation between ICU patients and vaccinations </h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the number of people vaccinated and the number of ICU
             patients with a confirmed COVID-19 case. It was assumed that if more
         people are vaccinated there would be fewer patients in the
             ICU with COVID-19.
-    </div>
+    </p>
 <a href="{{ url_for('icu_patients_vaccinations') }}">
         <button class="button button2" type="button" role="button">ICU Patients and Vaccinations </button>
 </a>
 </div>
 
-<div class="columnleft">
+<div class="column">
     <h3>Correlation between the number of people boosted and the COVID-19 test positivity rate</h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the number of people boosted and the COVID-19 test positivity
             rate. It was assumed that if more
         people were boosted, fewer people will be infected with COVID-19.
-    </div>
+    </p>
 <a href="{{ url_for('boosted_positive_rate') }}">
         <button class="button button2" type="button" role="button">Boosted and Positivity Rate </button>
 </a>
-</div>
 
-<div class="columnright">
     <h3>Correlation between total population and number of vaccinations</h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of population size of the likeliness of vaccination.
         It was assumed that countries with a smaller population had a higher vaccination
         rate because of groupthink.
-    </div>
+    </p>
 <a href="{{ url_for('population_vaccinated') }}">
         <button class="button button2" type="button" role="button">Total Population and Vaccinations </button>
 </a>
-</div>
 
 
-<div class="columnlockdown">
     <h3>Correlation between lockdowns, deaths, and cases </h3>
-    <div>
+    <p>
         The purpose of this visualization was to understand the
         affect of the lockdowns on the total number of deaths and cases
         a country experienced. It was assumed that countries with
         more strict lockdowns, experienced fewer deaths and cases.
-    </div>
+    </p>
 <a href="{{ url_for('lockdown_deaths') }}">
         <button class="button button2" type="button" role="button">Lockdowns, Deaths, and Cases </button>
 </a>
 </div>
-
+</div>
 {% endblock %}
