@@ -31,18 +31,6 @@ def vaccinated_deaths():
 def about():
     return render_template('about.html')
 
-
-@app.route("/positive_rate_by_population_density")
-def positive_rate_by_population_density():
-    positive_rate_by_population_density_df = query_data.get_positive_rate_by_population_density()
-    countries = positive_rate_by_population_density_df['location'].tolist()
-    population_density = positive_rate_by_population_density_df['population_density'].tolist()
-    positive_rate = positive_rate_by_population_density_df['average_positive_rate'].tolist()
-
-    return render_template('positive_rate_by_population_density.html', labels=countries,
-                           population_density=population_density, positive_rate=positive_rate)
-
-
 @app.route("/median_age_death_rate")
 def median_age_death_rate():
     median_age_death_rate_df = query_data.get_median_age_death_rate()

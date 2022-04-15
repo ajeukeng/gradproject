@@ -30,7 +30,6 @@ def query_data(db_name: str):
     if cu.check_path(db_name):
         query_covid_data = QD(db_location=db_name)
         query_covid_data.get_death_rate_fully_vaccinated()
-        query_covid_data.get_positive_rate_by_population_density()
         query_covid_data.get_median_age_death_rate()
         query_covid_data.get_positive_rate_for_total_tests()
         query_covid_data.get_icu_patients_vaccinations()

@@ -53,55 +53,6 @@ class QueryData(dbBase):
 
         return death_rate_fully_vaccinated_df
 
-    def get_positive_rate_by_population_density(self):
-        """Query to retrieve positivity rate based on population density over time"""
-        positive_rate_by_population_query = self.session.query(Population.population_density, Positive.positive_rate,
-                                                               Date.date,
-                                                               Location.location). \
-            join(Location, Location.location_population_id == Population.population_id). \
-            join(Positive, Positive.positive_id == Location.location_positive_id). \
-            join(Date, Date.date_positive_id == Positive.positive_id).distinct()
-        df = pd.read_sql(positive_rate_by_population_query.statement, con=self.session.bind)
-
-        # Verifying dataframe is not empty
-        if df.empty:
-            self.cvt_logger.error("Positive Rate by Population Density dataframe is empty")
-        df = df.dropna()
-        positive_rate_by_population_df = pd.DataFrame(columns=['population_density', 'average_positive_rate',
-                                                               'location'])
-        all_locations = df['location'].unique()
-        # Used to get most recent positive_rate based on date
-        df_w_last_positive_rate = df.drop_duplicates(subset='location', keep='last', ignore_index=True)
-        for location in all_locations:
-            count_result = df['location'].value_counts()[location]
-
-            # Gets sum of the positive rate of each location
-            df_to_get_sum_of_each_positive_rate = df.groupby(['location']).positive_rate.sum().reset_index()
-            positive_sum = df_to_get_sum_of_each_positive_rate.loc[df_to_get_sum_of_each_positive_rate['location']
-                                                                   == location, 'positive_rate'].iloc[0]
-
-            pop_density = \
-                df_w_last_positive_rate.loc[df_w_last_positive_rate['location'] == location, 'population_density'].iloc[
-                    0]
-
-            self.average_positivity_rate_dict = {'population_density': pop_density,
-                                                 'average_positive_rate': int(positive_sum) / count_result,
-                                                 'location': location}
-
-            df2 = pd.DataFrame([self.average_positivity_rate_dict])
-            positive_rate_by_population_df = pd.concat([positive_rate_by_population_df, df2], ignore_index=True)
-
-        # Ordered by population density
-        positive_rate_by_population_df = positive_rate_by_population_df.sort_values('population_density',
-                                                                                    ascending=False)
-
-        # Removing outliers
-        positive_rate_by_population_df = positive_rate_by_population_df[7:]
-
-        self.cvt_logger.info('Positivity Rate vs Population Density\n')
-        self.cvt_logger.info(positive_rate_by_population_df)
-
-        return positive_rate_by_population_df
 
     def get_median_age_death_rate(self):
         """Query to retrieve number median age vs total number of deaths"""
@@ -221,11 +172,6 @@ class QueryData(dbBase):
         # Ordered by population
         population_vaccinated_df = population_vaccinated_df.sort_values('population',
                                                                         ascending=False)
-
-        # Get ratio
-
-        population_vaccinated_df['Ratio'] = 1000 * population_vaccinated_df['total_vaccinations_per_hundred'] / \
-                                            population_vaccinated_df['population']
 
         # Removing outliers
         population_vaccinated_df = population_vaccinated_df[10:]
