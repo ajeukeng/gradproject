@@ -1,5 +1,5 @@
 from covidVisualizationTool.imports.importData import ImportData
-from common_utilities import get_file_from_path
+from covidVisualizationTool.app.common_utilities import get_file_from_path
 
 
 def test_load_tables(test_db_location):

@@ -1,5 +1,5 @@
-from common_utilities import get_file_from_path
-from covidVisualizationTool.imports.models import Population, Positive, Location, Date, Deaths, Stringency, Cases
+from covidVisualizationTool.app.common_utilities import get_file_from_path
+from covidVisualizationTool.imports.models import Population, Positive, Location, Date
 from covidVisualizationTool.queries.queryData import QueryData
 import pandas as pd
 
