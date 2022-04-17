@@ -1,6 +1,5 @@
 import pandas as pd
 
-from common_utilities import CommonUtilities as cu
 from src.covidVisualizationTool.imports.base import dbBase
 from src.covidVisualizationTool.imports.models import *
 
