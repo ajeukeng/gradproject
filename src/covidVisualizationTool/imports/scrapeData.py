@@ -3,7 +3,7 @@ import os
 import requests
 import csv
 from datetime import date
-from common_utilities import CommonUtilities as cu
+from covidVisualizationTool.app.common_utilities import CommonUtilities as cu
 
 
 class ScrapeData:

@@ -2,7 +2,7 @@ import pandas as pd
 
 from covidVisualizationTool.imports.base import dbBase
 from covidVisualizationTool.imports.models import *
-from common_utilities import CommonUtilities as cu
+from covidVisualizationTool.app.common_utilities import CommonUtilities as cu
 
 
 class QueryData(dbBase):
