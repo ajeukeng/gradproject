@@ -114,3 +114,5 @@ def lockdown_deaths():
                            cases=scaled_cases)
 
 
+if __name__ == "__main__":
+    app.run(debug=True)
