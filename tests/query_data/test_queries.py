@@ -1,4 +1,4 @@
-from common_utilities import get_file_from_path
+from covidVisualizationTool.app.common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData
 
 db_location = get_file_from_path('../docs/cvt-2-25-2022.db', __file__)

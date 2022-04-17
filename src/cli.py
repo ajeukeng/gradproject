@@ -1,7 +1,7 @@
 
 import click
 
-import common_utilities as cu
+from covidVisualizationTool.app import common_utilities as cu
 from covidVisualizationTool.imports.importData import ImportData as ID
 from covidVisualizationTool.imports.scrapeData import ScrapeData as SD
 from covidVisualizationTool.queries.queryData import QueryData as QD
