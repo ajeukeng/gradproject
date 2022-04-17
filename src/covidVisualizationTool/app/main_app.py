@@ -1,9 +1,10 @@
 from flask import Flask, render_template
-import os
+
+from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-db_location = '../../../docs/cvt_2022-04-11.db'
+db_location = get_file_from_path('../../../docs/cvt_2022-04-11.db', __file__)
 query_data = qd(db_location=db_location)
 
 
