@@ -1,1 +1,1 @@
-web: gunicorn -w 4 main_app:app
+web: gunicorn src.covidVisualizationTool.app.main_app:app
