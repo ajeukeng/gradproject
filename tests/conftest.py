@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from covidVisualizationTool.app.common_utilities import get_file_from_path
+from common_utilities import get_file_from_path
 
 
 @pytest.fixture()
