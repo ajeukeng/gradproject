@@ -13,7 +13,7 @@ class QueryData(dbBase):
         self.average_positivity_rate_dict = {}
         self.population_density = None
         self.last_row_population_total_vaccinations_dict = {}
-        self.cvt_logger = cu().cvt_logger()
+        # self.cvt_logger = cu().cvt_logger()
 
     def get_all_data(self):
         """Query to retrieve all distinct artifacts"""
@@ -40,7 +40,8 @@ class QueryData(dbBase):
                          con=self.session.bind)
         # Verifying df is not empty
         if df.empty:
-            self.cvt_logger.error("Death rate vs Vaccinated dataframe is empty")
+            pass
+            #self.cvt_logger.error("Death rate vs Vaccinated dataframe is empty")
 
         # Removes all Nans
         death_rate_fully_vaccinated_df = df.dropna()
@@ -48,8 +49,8 @@ class QueryData(dbBase):
         # Reset Index
         death_rate_fully_vaccinated_df = death_rate_fully_vaccinated_df.reset_index(drop=True)
 
-        self.cvt_logger.info('Partially Vaccinated, Fully Vaccinated, and Boosted vs New Deaths\n')
-        self.cvt_logger.info(death_rate_fully_vaccinated_df)
+        #self.cvt_logger.info('Partially Vaccinated, Fully Vaccinated, and Boosted vs New Deaths\n')
+        #self.cvt_logger.info(death_rate_fully_vaccinated_df)
 
         return death_rate_fully_vaccinated_df
 
@@ -65,7 +66,8 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Positive Rate by Population Density dataframe is empty")
+            pass
+            #self.cvt_logger.error("Positive Rate by Population Density dataframe is empty")
         df = df.dropna()
         positive_rate_by_population_df = pd.DataFrame(columns=['population_density', 'average_positive_rate',
                                                                'location'])
@@ -98,8 +100,8 @@ class QueryData(dbBase):
         # Removing outliers
         positive_rate_by_population_df = positive_rate_by_population_df[7:]
 
-        self.cvt_logger.info('Positivity Rate vs Population Density\n')
-        self.cvt_logger.info(positive_rate_by_population_df)
+        #self.cvt_logger.info('Positivity Rate vs Population Density\n')
+        #self.cvt_logger.info(positive_rate_by_population_df)
 
         return positive_rate_by_population_df
 
@@ -112,7 +114,8 @@ class QueryData(dbBase):
         df = pd.read_sql(median_age_death_rate_query.statement, con=self.session.bind)
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Median Age vs Death Rate dataframe is empty")
+            pass
+            #self.cvt_logger.error("Median Age vs Death Rate dataframe is empty")
         df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
@@ -121,8 +124,8 @@ class QueryData(dbBase):
         # Sorts by median age
         median_age_death_rate_df = median_age_death_rate_df.sort_values('total_deaths_per_million')
 
-        self.cvt_logger.info('Median Age vs Death Rate\n')
-        self.cvt_logger.info(median_age_death_rate_df)
+        #self.cvt_logger.info('Median Age vs Death Rate\n')
+        #self.cvt_logger.info(median_age_death_rate_df)
 
         return median_age_death_rate_df
 
@@ -140,11 +143,12 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Positive Rate vs Total Tests dataframe is empty")
+            pass
+            #self.cvt_logger.error("Positive Rate vs Total Tests dataframe is empty")
         positive_rate_for_total_tests_df = df.dropna()
 
-        self.cvt_logger.info('Positivity Rate vs Total Tests\n')
-        self.cvt_logger.info(positive_rate_for_total_tests_df)
+       # self.cvt_logger.info('Positivity Rate vs Total Tests\n')
+        #self.cvt_logger.info(positive_rate_for_total_tests_df)
 
         return positive_rate_for_total_tests_df
 
@@ -162,12 +166,13 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("ICU patients vs Vaccinations dataframe is empty")
+            pass
+            #self.cvt_logger.error("ICU patients vs Vaccinations dataframe is empty")
 
         icu_patients_vaccinations_df = df.dropna()
 
-        self.cvt_logger.info('ICU Patients vs Vaccinations\n')
-        self.cvt_logger.info(icu_patients_vaccinations_df)
+        #self.cvt_logger.info('ICU Patients vs Vaccinations\n')
+        #self.cvt_logger.info(icu_patients_vaccinations_df)
 
         return icu_patients_vaccinations_df
 
@@ -187,12 +192,13 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Boosted vs Positive Rate dataframe is empty")
+            pass
+            #self.cvt_logger.error("Boosted vs Positive Rate dataframe is empty")
 
         boosted_positive_rate_df = df.dropna()
 
-        self.cvt_logger.info('Boosted vs Positivity Rate\n')
-        self.cvt_logger.info(boosted_positive_rate_df)
+        #self.cvt_logger.info('Boosted vs Positivity Rate\n')
+        #self.cvt_logger.info(boosted_positive_rate_df)
 
         return boosted_positive_rate_df
 
@@ -209,7 +215,8 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Population vs Vaccinated dataframe is empty")
+            pass
+            #self.cvt_logger.error("Population vs Vaccinated dataframe is empty")
         df = df.dropna()
 
         # Gets the last row of each location based on date and resets index
@@ -230,8 +237,8 @@ class QueryData(dbBase):
         # Removing outliers
         population_vaccinated_df = population_vaccinated_df[10:]
 
-        self.cvt_logger.info('Population vs Vaccination Rate\n')
-        self.cvt_logger.info(population_vaccinated_df)
+        #self.cvt_logger.info('Population vs Vaccination Rate\n')
+        #self.cvt_logger.info(population_vaccinated_df)
 
         return population_vaccinated_df
 
@@ -251,7 +258,8 @@ class QueryData(dbBase):
 
         # Verifying dataframe is not empty
         if df.empty:
-            self.cvt_logger.error("Stringency vs Death Rate dataframe is empty")
+            pass
+            #self.cvt_logger.error("Stringency vs Death Rate dataframe is empty")
         stringency_death_rate_df = df.dropna()
 
         stringency_death_rate_df.groupby(['location'])['stringency_index'].max()
@@ -264,7 +272,7 @@ class QueryData(dbBase):
         stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last',
                                                                             ignore_index=True)
 
-        self.cvt_logger.info('Stringency vs Death Rate and Cases\n')
-        self.cvt_logger.info(stringency_death_rate_df)
+        #self.cvt_logger.info('Stringency vs Death Rate and Cases\n')
+        #self.cvt_logger.info(stringency_death_rate_df)
 
         return stringency_death_rate_df
