@@ -17,7 +17,9 @@ def get_file_from_path(filename, calling_file):
 class CommonUtilities:
     def __init__(self):
         self.date = date.today()
-        log_filename = os.path.join('logs', f'cvt{self.date}.log')
+        if not os.path.exists('../../../logs'):
+            os.mkdir('../../../logs')
+        log_filename = os.path.join('../../../logs', f'cvt{self.date}.log')
         logging.basicConfig(filename=get_file_from_path(log_filename, __file__),
                             filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
         self.logger = logging.getLogger()
