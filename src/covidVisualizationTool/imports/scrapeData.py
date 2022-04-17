@@ -4,7 +4,7 @@ from datetime import date
 
 import requests
 
-from src.covidVisualizationTool.app.common_utilities import CommonUtilities as cu
+from common_utilities import CommonUtilities as cu
 
 
 class ScrapeData:
