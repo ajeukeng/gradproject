@@ -8,7 +8,7 @@ db_location = get_file_from_path('../../../docs/cvt_2022-04-11.db', __file__)
 query_data = qd(db_location=db_location)
 
 
-@app.route("/", methods=("POST", "GET"))
+@app.route("/", methods=["GET"])
 def home():
     return render_template('index.html')
 
