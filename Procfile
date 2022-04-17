@@ -1,1 +1,1 @@
-web: gunicorn src.covidVisualizationTool.app.main_app:app
+web: gunicorn --workers 3 src.covidVisualizationTool.app.main_app:app
