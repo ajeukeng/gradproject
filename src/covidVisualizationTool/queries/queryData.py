@@ -1,7 +1,7 @@
 import pandas as pd
 
-from src.covidVisualizationTool.imports.base import dbBase
-from src.covidVisualizationTool.imports.models import *
+from covidVisualizationTool.imports.base import dbBase
+from covidVisualizationTool.imports.models import *
 
 
 class QueryData(dbBase):
