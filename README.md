@@ -59,3 +59,6 @@ pip install --user --editable .
 # . venv/bin/activate
 pip freeze > requirements.txt
 ```
+
+#### Viewing Site
+- The Covid Visualization Tool production version is located at this url: https://covid-visualization-tool.herokuapp.com/ .
