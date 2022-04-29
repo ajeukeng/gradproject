@@ -163,9 +163,10 @@ class QueryData(dbBase):
 
         # Makes total_deaths_per_million and total_cases_per_million whole numbers
         stringency_death_rate_df.total_deaths_per_million = stringency_death_rate_df.total_deaths_per_million.round()
-        stringency_death_rate_df.total_cases_per_million = stringency_death_rate_df.total_cases_per_million.round()
 
         # Gets the last row of each location based on date and resets index
         stringency_death_rate_df = stringency_death_rate_df.drop_duplicates(subset='location', keep='last',
                                                                             ignore_index=True)
+
+        print(stringency_death_rate_df)
         return stringency_death_rate_df
