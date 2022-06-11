@@ -4,7 +4,7 @@ from common_utilities import get_file_from_path
 from covidVisualizationTool.queries.queryData import QueryData as qd
 
 app = Flask(__name__)
-db_location = get_file_from_path('cvt_2022-05-15.db', __file__)
+db_location = get_file_from_path('cvt_2022-06-09.db', __file__)
 query_data = qd(db_location=db_location)
 
 
